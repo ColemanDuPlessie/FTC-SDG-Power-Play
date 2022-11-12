@@ -1,10 +1,6 @@
-package org.firstinspires.ftc.teamcode.backend.commandbased.commands;
-
-import com.qualcomm.robotcore.hardware.Gamepad;
+package org.firstinspires.ftc.teamcode.backend.commands;
 
 import org.firstinspires.ftc.teamcode.backend.Robot19397;
-import org.firstinspires.ftc.teamcode.backend.commandbased.Command;
-import org.firstinspires.ftc.teamcode.backend.commandbased.Subsystem;
 import org.firstinspires.ftc.teamcode.backend.utilities.GamepadWrapper;
 
 public class DriveFromGamepad implements Command {

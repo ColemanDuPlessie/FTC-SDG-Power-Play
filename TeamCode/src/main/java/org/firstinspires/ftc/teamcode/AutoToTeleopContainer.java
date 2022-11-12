@@ -1,12 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import org.firstinspires.ftc.teamcode.backend.commandbased.Command;
-import org.firstinspires.ftc.teamcode.backend.commandbased.CommandScheduler;
-import org.firstinspires.ftc.teamcode.backend.commandbased.Subsystem;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
 public class AutoToTeleopContainer {
     private static final AutoToTeleopContainer INSTANCE = new AutoToTeleopContainer();
     public static AutoToTeleopContainer getInstance() {return INSTANCE;}

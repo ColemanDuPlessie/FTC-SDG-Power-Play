@@ -40,8 +40,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.AutoToTeleopContainer;
 import org.firstinspires.ftc.teamcode.backend.subsystems.ArmSubsystem;
-import org.firstinspires.ftc.teamcode.backend.subsystems.CarouselSubsystem;
-import org.firstinspires.ftc.teamcode.backend.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.backend.subsystems.SlidesSubsystem;
 
 /**

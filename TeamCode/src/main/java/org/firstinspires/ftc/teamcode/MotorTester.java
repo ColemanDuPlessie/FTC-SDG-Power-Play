@@ -33,17 +33,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.backend.commandbased.CommandbasedOpmode;
-import org.firstinspires.ftc.teamcode.backend.commandbased.Subsystem;
-import org.firstinspires.ftc.teamcode.backend.commandbased.SubsystemInUseException;
-import org.firstinspires.ftc.teamcode.backend.commandbased.commands.DriveFromGamepad;
-import org.firstinspires.ftc.teamcode.backend.commandbased.commands.HoldSubsystemPosition;
 import org.firstinspires.ftc.teamcode.backend.utilities.GamepadWrapper;
 import org.firstinspires.ftc.teamcode.backend.utilities.PressableButton;
-import org.firstinspires.ftc.teamcode.backend.utilities.RadioButtons;
-
-import java.util.HashMap;
-import java.util.function.Supplier;
 
 
 /**

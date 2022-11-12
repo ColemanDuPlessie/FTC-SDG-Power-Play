@@ -1,8 +1,4 @@
-package org.firstinspires.ftc.teamcode.backend.commandbased.commands;
-
-import org.firstinspires.ftc.teamcode.backend.commandbased.Command;
-import org.firstinspires.ftc.teamcode.backend.commandbased.Subsystem;
-import org.firstinspires.ftc.teamcode.backend.subsystems.SpeedControlled;
+package org.firstinspires.ftc.teamcode.backend.commands;
 
 public class SetSubsystemSpeed implements Command {
 
