@@ -1,11 +1,15 @@
 package org.firstinspires.ftc.teamcode.backend.commands;
 
+import com.arcrobotics.ftclib.command.Command;
+import com.arcrobotics.ftclib.command.CommandBase;
+
+import org.firstinspires.ftc.teamcode.backend.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.backend.Robot19397;
 import org.firstinspires.ftc.teamcode.backend.utilities.GamepadWrapper;
 
-public class DriveFromGamepad implements Command {
+public class DriveFromGamepad extends CommandBase {
 
-    private final Robot19397 robot;
+    private final DrivetrainSubsystem dt;
     private final GamepadWrapper gamepad;
     private final boolean isFieldCentric;
 
@@ -13,39 +17,32 @@ public class DriveFromGamepad implements Command {
     private final double defaultSpeed = 0.8;
     private final double minSpeed = 0.25;
 
-    public DriveFromGamepad(Robot19397 robot, GamepadWrapper gamepad, boolean fieldCentric) {
+    public DriveFromGamepad(DrivetrainSubsystem dt, GamepadWrapper gamepad, boolean fieldCentric) {
         this.gamepad = gamepad;
-        this.robot = robot;
+        this.dt = dt;
+        addRequirements(dt);
         isFieldCentric = fieldCentric;
     }
 
     @Override
-    public boolean isInterruptable() { return true; }
+    public void initialize() {}
 
     @Override
-    public Subsystem[] subsystemsUsed() {
-        return new Subsystem[]{Subsystem.DRIVETRAIN};
-    }
-
-    @Override
-    public void init() {}
-
-    @Override
-    public void update() {
+    public void execute() {
         double forward = -gamepad.getLeftStickY();
         double turn = gamepad.getRightStickX();
         double strafe = gamepad.getLeftStickX();
         double speed = defaultSpeed + gamepad.getRightTrigger() * (topSpeed-defaultSpeed) - gamepad.getLeftTrigger() * (defaultSpeed-minSpeed);
         if (isFieldCentric) {
-            robot.driveFieldCentric(forward, turn, strafe, speed);
+            dt.driveFieldCentric(forward, turn, strafe, speed);
         } else {
-            robot.driveSimple(forward, turn, strafe, speed);
+            dt.driveSimple(forward, turn, strafe, speed);
         }
     }
 
     @Override
-    public boolean isOver() { return false; }
+    public boolean isFinished() { return false; }
 
     @Override
-    public void stop(boolean isInterrupted) {}
+    public void end(boolean isInterrupted) {}
 }

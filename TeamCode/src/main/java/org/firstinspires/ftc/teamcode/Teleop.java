@@ -33,11 +33,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.backend.CommandbasedOpmode;
 import org.firstinspires.ftc.teamcode.backend.commands.DriveFromGamepad;
-import org.firstinspires.ftc.teamcode.backend.commands.HoldSubsystemPosition;
-import org.firstinspires.ftc.teamcode.backend.utilities.RadioButtons;
-
-import java.util.HashMap;
-import java.util.function.Supplier;
 
 
 /**
@@ -66,13 +61,9 @@ public class Teleop extends CommandbasedOpmode {
      */
     @Override
     public void start() {
+        scheduler.schedule(new DriveFromGamepad(robot.drivetrain, pad1, SetDrivingStyle.isFieldCentric));
 
-        try {
-            scheduler.scheduleCommand(new DriveFromGamepad(robot, pad1, SetDrivingStyle.isFieldCentric));
-
-        } catch (SubsystemInUseException e) {} // This catch block will never occur
-
-        scheduler.setDefaultCommand(new HoldSubsystemPosition(robot.slides,
+/*        scheduler.setDefaultCommand(new HoldSubsystemPosition(robot.slides,
                 new RadioButtons(new HashMap<Supplier<Boolean>, Object>() {{
                     put(pad1::getDpadDown, 0.0); // TODO Dpad down is remapped to B. We'll see if this is an improvement.
                     put(pad1::getDpadUp, 1.0); // The slides must be down if we're running the intake
@@ -85,7 +76,7 @@ public class Teleop extends CommandbasedOpmode {
                 new RadioButtons(new HashMap<Supplier<Boolean>, Object>() {{
                     put(pad1::getA, 1.0);
                     put(pad1::getB, 0.0);
-                }}, false), Subsystem.ARM, 0.0));
+                }}, false), Subsystem.ARM, 0.0));*/
 
     }
 

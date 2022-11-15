@@ -1,7 +1,13 @@
 package org.firstinspires.ftc.teamcode.backend;
 
+import com.arcrobotics.ftclib.command.Command;
+import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.Robot;
+import com.arcrobotics.ftclib.command.Subsystem;
 import com.outoftheboxrobotics.photoncore.PhotonCore;
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -10,6 +16,42 @@ import org.firstinspires.ftc.teamcode.backend.utilities.GamepadWrapper;
 import java.util.List;
 
 public abstract class CommandbasedOpmode extends OpMode {
+
+    /**
+     * Cancels all previous commands
+     */
+    public void reset() {
+        CommandScheduler.getInstance().reset();
+    }
+
+    /**
+     * Runs the {@link CommandScheduler} instance
+     */
+    public void run() {
+        CommandScheduler.getInstance().run();
+    }
+
+    /**
+     * Schedules {@link com.arcrobotics.ftclib.command.Command} objects to the scheduler
+     */
+    public void schedule(Command... commands) {
+        CommandScheduler.getInstance().schedule(commands);
+    }
+
+    /**
+     * Registers {@link com.arcrobotics.ftclib.command.Subsystem} objects to the scheduler
+     */
+    public void register(Subsystem... subsystems) {
+        CommandScheduler.getInstance().registerSubsystem(subsystems);
+    }
+
+    public static void disable() {
+        Robot.disable();
+    }
+
+    public static void enable() {
+        Robot.enable();
+    }
 
     protected CommandScheduler scheduler = CommandScheduler.getInstance();
     protected ElapsedTime timer = new ElapsedTime();
@@ -23,7 +65,6 @@ public abstract class CommandbasedOpmode extends OpMode {
     public void internalPreInit() {
         super.internalPreInit();
         PhotonCore.enable();
-        scheduler.beginOpmode();
         pad1 = new GamepadWrapper(gamepad1);
         pad2 = new GamepadWrapper(gamepad2);
         allHubs = hardwareMap.getAll(LynxModule.class);
@@ -43,8 +84,7 @@ public abstract class CommandbasedOpmode extends OpMode {
     @Override
     public void internalPostLoop() {
         super.internalPostLoop();
-        scheduler.update(telemetry);
-        robot.update();
+        scheduler.run();
         for (LynxModule module : allHubs) {
             module.clearBulkCache();
         }
