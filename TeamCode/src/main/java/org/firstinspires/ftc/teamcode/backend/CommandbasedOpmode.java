@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.backend;
 
+import com.outoftheboxrobotics.photoncore.PhotonCore;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -21,6 +22,7 @@ public abstract class CommandbasedOpmode extends OpMode {
     @Override
     public void internalPreInit() {
         super.internalPreInit();
+        PhotonCore.enable();
         scheduler.beginOpmode();
         pad1 = new GamepadWrapper(gamepad1);
         pad2 = new GamepadWrapper(gamepad2);
