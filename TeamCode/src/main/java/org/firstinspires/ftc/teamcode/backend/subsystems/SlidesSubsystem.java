@@ -17,7 +17,7 @@ public class SlidesSubsystem extends SubsystemBase implements PositionControlled
 
     public DcMotor motor;
 
-    private final PIDController PIDF;
+    private PIDController PIDF;
 
     public static int minPosition = -60; // We don't actually want to go all the way down.
     public static int maxPosition = -3700;
@@ -32,9 +32,9 @@ public class SlidesSubsystem extends SubsystemBase implements PositionControlled
 
     private int targetPosition;
 
-    private final int startPosition;
+    private int startPosition;
 
-    public SlidesSubsystem(ElapsedTime aTimer, HardwareMap ahwMap) {
+    public void init(ElapsedTime aTimer, HardwareMap ahwMap) {
         motor = ahwMap.get(DcMotor.class, "SlidesMotor");
         motor.setDirection(DcMotorSimple.Direction.FORWARD);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -43,7 +43,7 @@ public class SlidesSubsystem extends SubsystemBase implements PositionControlled
         PIDF = new GravityPIDFController(kP, kI, kD, aTimer, kG);
     }
 
-    public SlidesSubsystem(ElapsedTime aTimer, HardwareMap ahwMap, boolean isTeleop) {
+    public void init(ElapsedTime aTimer, HardwareMap ahwMap, boolean isTeleop) {
         motor = ahwMap.get(DcMotor.class, "SlidesMotor");
         motor.setDirection(DcMotorSimple.Direction.FORWARD);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

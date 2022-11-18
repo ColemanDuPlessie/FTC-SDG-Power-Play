@@ -56,6 +56,7 @@ public class Robot19397 extends Robot {
         this.timer = timer;
         this.drivetrain = new DrivetrainSubsystem();
         this.arm = new ArmSubsystem();
+        this.slides = new SlidesSubsystem();
     }
 
     /* Initialize standard Hardware interfaces */
@@ -70,7 +71,8 @@ public class Robot19397 extends Robot {
         CommandScheduler.getInstance().registerSubsystem(this.drivetrain);
         arm.init(timer, ahwMap, isTeleop);
         CommandScheduler.getInstance().registerSubsystem(this.arm);
-        slides = new SlidesSubsystem(timer, hwMap, isTeleop);
+        slides.init(timer, ahwMap, isTeleop);
+        CommandScheduler.getInstance().registerSubsystem(this.slides);
     }
 
  }
