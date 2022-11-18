@@ -23,9 +23,9 @@ public class ArmSubsystem extends SubsystemBase implements PositionControlled {
     private PIDController PIDF;
 
     public static int minPosition = 0;
-    public static int maxPosition = 1350;
-    public static int horizPos = 0;
-    public static int vertPos = 700;
+    public static int maxPosition = 1500;
+    public static int horizPos = 100;
+    public static int vertPos = 750;
 
     public static double kP = 0.015;
     public static double kI = 0.0001;
@@ -39,16 +39,16 @@ public class ArmSubsystem extends SubsystemBase implements PositionControlled {
 
     public void init(ElapsedTime aTimer, HardwareMap ahwMap) {
         motor = ahwMap.get(DcMotor.class, "ArmMotor");
-        motor.setDirection(DcMotorSimple.Direction.FORWARD);
+        motor.setDirection(DcMotorSimple.Direction.REVERSE);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         startPosition = motor.getCurrentPosition();
-        targetPosition = 0;
+        targetPosition = startPosition;
         PIDF = new ArmPIDFController(kP, kI, kD, aTimer, kG, horizPos, vertPos);
     }
 
     public void init(ElapsedTime aTimer, HardwareMap ahwMap, boolean isTeleop) {
         motor = ahwMap.get(DcMotor.class, "ArmMotor");
-        motor.setDirection(DcMotorSimple.Direction.FORWARD);
+        motor.setDirection(DcMotorSimple.Direction.REVERSE);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         if (isTeleop) {
             Integer position = AutoToTeleopContainer.getInstance().getArmPosition();
@@ -59,7 +59,7 @@ public class ArmSubsystem extends SubsystemBase implements PositionControlled {
             startPosition = motor.getCurrentPosition();
             AutoToTeleopContainer.getInstance().setArmPosition(startPosition);
         }
-        targetPosition = 0;
+        targetPosition = startPosition;
         PIDF = new ArmPIDFController(kP, kI, kD, aTimer, kG, horizPos, vertPos);
     }
 

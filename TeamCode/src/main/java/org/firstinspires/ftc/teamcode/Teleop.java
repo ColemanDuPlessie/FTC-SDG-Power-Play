@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import static java.lang.Thread.sleep;
+
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -57,15 +59,16 @@ public class Teleop extends CommandbasedOpmode {
         GamepadEx gamepad = new GamepadEx(gamepad1);
 
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
-                .whenReleased(new InstantCommand(() -> robot.arm.incrementTargetPosition(-0.1), robot.arm));
+                .whenReleased(new InstantCommand(() -> robot.arm.incrementTargetPosition(-0.2), robot.arm));
 
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whenReleased(new InstantCommand(() -> robot.arm.incrementTargetPosition(0.1), robot.arm));
+                .whenReleased(new InstantCommand(() -> robot.arm.incrementTargetPosition(0.2), robot.arm));
     }
 
     @Override
     public void loop() {
         telemetry.addData("Arm pos", robot.arm.getPosition());
         telemetry.addData("Target pos", robot.arm.getTargetPosition());
+        telemetry.addData("Arm spd", robot.arm.motor.getPower());
     }
 }
