@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode.backend.commands;
 
-import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandBase;
 
-import org.firstinspires.ftc.teamcode.backend.DrivetrainSubsystem;
-import org.firstinspires.ftc.teamcode.backend.Robot19397;
+import org.firstinspires.ftc.teamcode.backend.subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.backend.utilities.GamepadWrapper;
 
 public class DriveFromGamepad extends CommandBase {

@@ -29,6 +29,9 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.backend.CommandbasedOpmode;
@@ -44,54 +47,25 @@ public class Teleop extends CommandbasedOpmode {
 
     @Override
     public void init() {
-
         robot.init(hardwareMap, true);
-
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
-    @Override
-    public void init_loop() {
-    }
-
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
     @Override
     public void start() {
         scheduler.schedule(new DriveFromGamepad(robot.drivetrain, pad1, SetDrivingStyle.isFieldCentric));
 
-/*        scheduler.setDefaultCommand(new HoldSubsystemPosition(robot.slides,
-                new RadioButtons(new HashMap<Supplier<Boolean>, Object>() {{
-                    put(pad1::getDpadDown, 0.0); // TODO Dpad down is remapped to B. We'll see if this is an improvement.
-                    put(pad1::getDpadUp, 1.0); // The slides must be down if we're running the intake
-                    put(pad1::getDpadLeft, 0.35);
-                    put(pad1::getDpadRight, 0.7);
-                    put(pad1::getLeftBumper, 0.2);
-                }}, false), Subsystem.SLIDES, 0.0, () -> pad1.getX() ? 0.05 : null));
+        GamepadEx gamepad = new GamepadEx(gamepad1);
 
-        scheduler.setDefaultCommand(new HoldSubsystemPosition(robot.arm,
-                new RadioButtons(new HashMap<Supplier<Boolean>, Object>() {{
-                    put(pad1::getA, 1.0);
-                    put(pad1::getB, 0.0);
-                }}, false), Subsystem.ARM, 0.0));*/
+        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+                .whenReleased(new InstantCommand(() -> robot.arm.incrementTargetPosition(-0.1), robot.arm));
 
+        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+                .whenReleased(new InstantCommand(() -> robot.arm.incrementTargetPosition(0.1), robot.arm));
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-     */
     @Override
     public void loop() {
-
-    }
-
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
-    @Override
-    public void stop() {
+        telemetry.addData("Arm pos", robot.arm.getPosition());
+        telemetry.addData("Target pos", robot.arm.getTargetPosition());
     }
 }

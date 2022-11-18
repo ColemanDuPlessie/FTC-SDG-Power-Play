@@ -31,17 +31,11 @@ package org.firstinspires.ftc.teamcode.backend;
 
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.Robot;
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.AutoToTeleopContainer;
 import org.firstinspires.ftc.teamcode.backend.subsystems.ArmSubsystem;
+import org.firstinspires.ftc.teamcode.backend.subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.backend.subsystems.SlidesSubsystem;
 
 /**
@@ -61,6 +55,7 @@ public class Robot19397 extends Robot {
     public Robot19397(ElapsedTime timer){
         this.timer = timer;
         this.drivetrain = new DrivetrainSubsystem();
+        this.arm = new ArmSubsystem();
     }
 
     /* Initialize standard Hardware interfaces */
@@ -73,7 +68,8 @@ public class Robot19397 extends Robot {
         hwMap = ahwMap;
         this.drivetrain.init(ahwMap, isTeleop);
         CommandScheduler.getInstance().registerSubsystem(this.drivetrain);
-        arm = new ArmSubsystem(timer, hwMap);
+        arm.init(timer, ahwMap, isTeleop);
+        CommandScheduler.getInstance().registerSubsystem(this.arm);
         slides = new SlidesSubsystem(timer, hwMap, isTeleop);
     }
 
