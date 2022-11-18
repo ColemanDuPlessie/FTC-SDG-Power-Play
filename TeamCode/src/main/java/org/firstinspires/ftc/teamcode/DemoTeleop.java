@@ -68,7 +68,7 @@ public class DemoTeleop extends CommandbasedOpmode {
     @Override
     public void start() {
 
-        try {
+/*        try {
             scheduler.scheduleCommand(new DriveFromGamepad(robot, pad1, SetDrivingStyle.isFieldCentric));
 
         } catch (SubsystemInUseException e) {} // This catch block will never occur
@@ -82,7 +82,7 @@ public class DemoTeleop extends CommandbasedOpmode {
         scheduler.setDefaultCommand(new HoldSubsystemPosition(robot.arm,
                 new RadioButtons(new HashMap<Supplier<Boolean>, Object>() {{
                     put(pad1::getX, 0.1);
-                }}, false), Subsystem.ARM, 0.1));
+                }}, false), Subsystem.ARM, 0.1));*/
 
     }
 

@@ -29,9 +29,9 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
-import org.firstinspires.ftc.teamcode.backend.CommandbasedOpmode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 
 /**
@@ -39,15 +39,18 @@ import org.firstinspires.ftc.teamcode.backend.CommandbasedOpmode;
  */
 
 @TeleOp(name="Slides Logger")
-public class SlidesLoggerTest extends CommandbasedOpmode {
+public class SlidesLoggerTest extends OpMode {
+
+
+    DcMotor motor;
 
     @Override
     public void init() {
-        robot.init(hardwareMap, true);
+        motor = hardwareMap.get(DcMotor.class, "SlidesMotor");
     }
     
     @Override
     public void loop() {
-        telemetry.addData("Slides Position", robot.slides.motor.getCurrentPosition());
+        telemetry.addData("Slides Position", motor.getCurrentPosition());
     }
 }

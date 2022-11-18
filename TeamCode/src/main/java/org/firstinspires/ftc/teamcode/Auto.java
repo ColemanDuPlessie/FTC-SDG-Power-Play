@@ -35,7 +35,6 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.backend.CommandbasedOpmode;
-import org.firstinspires.ftc.teamcode.backend.commands.FollowRRTraj;
 import org.firstinspires.ftc.teamcode.backend.cv.TeamShippingElementDetector;
 import org.firstinspires.ftc.teamcode.backend.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.backend.roadrunner.trajectorysequence.TrajectorySequence;
@@ -70,7 +69,7 @@ public class Auto extends CommandbasedOpmode {
 
     @Override
     public void init() {
-
+/*
         robot.init(hardwareMap, false);
 
         startHeading = robot.getHeading();
@@ -100,9 +99,9 @@ public class Auto extends CommandbasedOpmode {
                 .build();
     }
 
-    /*
+    *//*
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
+     *//*
     @Override
     public void init_loop() {
 
@@ -121,9 +120,9 @@ public class Auto extends CommandbasedOpmode {
         } else { telemetry.addLine("Tag is not detected"); }
     }
 
-    /*
+    *//*
      * Code to run ONCE when the driver hits PLAY
-     */
+     *//*
     @Override
     public void start() {
         try {
@@ -137,7 +136,7 @@ public class Auto extends CommandbasedOpmode {
             scheduler.scheduleCommand(new FollowRRTraj(drive, C));
         } else if (tagPosition == TeamShippingElementDetector.POSITIONS.THREE) {
             scheduler.scheduleCommand(new FollowRRTraj(drive, R));
-        }
+        }*/
     }
 
     /*
@@ -152,6 +151,6 @@ public class Auto extends CommandbasedOpmode {
      */
     @Override
     public void stop() {
-        AutoToTeleopContainer.getInstance().setAngleDelta(startHeading-robot.getHeading()+Math.toRadians(180));
+//        AutoToTeleopContainer.getInstance().setAngleDelta(startHeading-robot.getHeading()+Math.toRadians(180));
     }
 }
