@@ -5,14 +5,11 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AutoToTeleopContainer;
-import org.firstinspires.ftc.teamcode.backend.utilities.DoubledServo;
 import org.firstinspires.ftc.teamcode.backend.utilities.PositionControlled;
 import org.firstinspires.ftc.teamcode.backend.utilities.controllers.ArmPIDFController;
-import org.firstinspires.ftc.teamcode.backend.utilities.controllers.GravityPIDFController;
 import org.firstinspires.ftc.teamcode.backend.utilities.controllers.PIDController;
 
 @Config
