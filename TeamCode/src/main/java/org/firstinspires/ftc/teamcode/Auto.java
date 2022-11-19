@@ -35,6 +35,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.backend.CommandbasedOpmode;
+import org.firstinspires.ftc.teamcode.backend.commands.FollowRRTraj;
 import org.firstinspires.ftc.teamcode.backend.cv.TeamShippingElementDetector;
 import org.firstinspires.ftc.teamcode.backend.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.backend.roadrunner.trajectorysequence.TrajectorySequence;
@@ -69,10 +70,9 @@ public class Auto extends CommandbasedOpmode {
 
     @Override
     public void init() {
-/*
         robot.init(hardwareMap, false);
 
-        startHeading = robot.getHeading();
+        startHeading = robot.drivetrain.getHeading();
 
         Pose2d startPose = new Pose2d(STARTX, STARTY, Math.toRadians(STARTTHETA));
 
@@ -99,9 +99,9 @@ public class Auto extends CommandbasedOpmode {
                 .build();
     }
 
-    *//*
+    /*
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     *//*
+     */
     @Override
     public void init_loop() {
 
@@ -120,9 +120,9 @@ public class Auto extends CommandbasedOpmode {
         } else { telemetry.addLine("Tag is not detected"); }
     }
 
-    *//*
+    /*
      * Code to run ONCE when the driver hits PLAY
-     *//*
+     */
     @Override
     public void start() {
         try {
@@ -131,12 +131,12 @@ public class Auto extends CommandbasedOpmode {
             telemetry.addLine("Camera was not initialized. CV pipeline replaced by default behavior.");
         }
         if (tagPosition == TeamShippingElementDetector.POSITIONS.ONE) {
-            scheduler.scheduleCommand(new FollowRRTraj(drive, L));
+            scheduler.schedule(false, new FollowRRTraj(robot.drivetrain, drive, L));
         } else if (tagPosition == TeamShippingElementDetector.POSITIONS.TWO || tagPosition == null) {
-            scheduler.scheduleCommand(new FollowRRTraj(drive, C));
+            scheduler.schedule(false, new FollowRRTraj(robot.drivetrain, drive, C));
         } else if (tagPosition == TeamShippingElementDetector.POSITIONS.THREE) {
-            scheduler.scheduleCommand(new FollowRRTraj(drive, R));
-        }*/
+            scheduler.schedule(false, new FollowRRTraj(robot.drivetrain, drive, R));
+        }
     }
 
     /*
@@ -151,6 +151,6 @@ public class Auto extends CommandbasedOpmode {
      */
     @Override
     public void stop() {
-//        AutoToTeleopContainer.getInstance().setAngleDelta(startHeading-robot.getHeading()+Math.toRadians(180));
+        AutoToTeleopContainer.getInstance().setAngleDelta(startHeading-robot.drivetrain.getHeading()+Math.toRadians(180));
     }
 }
