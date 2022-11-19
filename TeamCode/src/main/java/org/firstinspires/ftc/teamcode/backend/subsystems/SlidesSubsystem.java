@@ -20,12 +20,12 @@ public class SlidesSubsystem extends SubsystemBase implements PositionControlled
     private PIDController PIDF;
 
     public static int minPosition = 0; // We don't actually want to go all the way down.
-    public static int maxPosition = 1000;
+    public static int maxPosition = 1600;
 
-    public static double kP = 0.005;
+    public static double kP = 0.008;
     public static double kI = 0.0000;
     public static double kD = 0.0001;
-    public static double kG = 0.1;
+    public static double kG = 0.4;
     public static double maxPower = 0.75;
     public static double edgePower = 0.25;
     public static int edgeDistance = 200;
@@ -77,7 +77,7 @@ public class SlidesSubsystem extends SubsystemBase implements PositionControlled
     public void periodic() {
         int currentPosition = motor.getCurrentPosition();
         double powerMultThrottle = edgePower + (maxPower - edgePower) * Math.min(((double)(Math.min(Math.abs(currentPosition-minPosition), Math.abs(currentPosition-maxPosition))))/edgeDistance, 1.0);
-        motor.setPower(Math.min(powerMultThrottle, Math.max(PIDF.update(motor.getCurrentPosition()-startPosition, targetPosition) * powerMultThrottle + kG, -powerMultThrottle)));
+        motor.setPower(Math.min(powerMultThrottle, Math.max(PIDF.update(motor.getCurrentPosition()-startPosition, targetPosition) * powerMultThrottle, -powerMultThrottle)) + kG);
     }
 
 }

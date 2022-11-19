@@ -60,9 +60,20 @@ public class Teleop extends CommandbasedOpmode {
 
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
                 .whenReleased(new InstantCommand(() -> robot.arm.incrementTargetPosition(-0.2), robot.arm));
-
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
                 .whenReleased(new InstantCommand(() -> robot.arm.incrementTargetPosition(0.2), robot.arm));
+
+        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+                .whenReleased(new InstantCommand(() -> robot.slides.incrementTargetPosition(0.2), robot.slides));
+        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+                .whenReleased(new InstantCommand(() -> robot.slides.incrementTargetPosition(-0.2), robot.slides));
+
+        gamepad.getGamepadButton(GamepadKeys.Button.A)
+                .whenReleased(new InstantCommand(() -> robot.deposit.intake(), robot.deposit));
+        gamepad.getGamepadButton(GamepadKeys.Button.B)
+                .whenReleased(new InstantCommand(() -> robot.deposit.hold(), robot.deposit));
+        gamepad.getGamepadButton(GamepadKeys.Button.X)
+                .whenReleased(new InstantCommand(() -> robot.deposit.deposit(), robot.deposit));
     }
 
     @Override
@@ -70,5 +81,9 @@ public class Teleop extends CommandbasedOpmode {
         telemetry.addData("Arm pos", robot.arm.getPosition());
         telemetry.addData("Target pos", robot.arm.getTargetPosition());
         telemetry.addData("Arm spd", robot.arm.motor.getPower());
+        telemetry.addLine();
+        telemetry.addData("Slides pos", robot.slides.getPosition());
+        telemetry.addData("Target pos", robot.slides.getTargetPosition());
+        telemetry.addData("Slides spd", robot.slides.motor.getPower());
     }
 }

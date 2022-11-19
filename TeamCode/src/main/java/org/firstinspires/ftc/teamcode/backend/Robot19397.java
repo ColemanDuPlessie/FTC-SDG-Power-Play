@@ -35,6 +35,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.backend.subsystems.ArmSubsystem;
+import org.firstinspires.ftc.teamcode.backend.subsystems.DepositSubsystem;
 import org.firstinspires.ftc.teamcode.backend.subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.backend.subsystems.SlidesSubsystem;
 
@@ -43,8 +44,9 @@ import org.firstinspires.ftc.teamcode.backend.subsystems.SlidesSubsystem;
  */
 public class Robot19397 extends Robot {
 
-    public ArmSubsystem arm;
-    public SlidesSubsystem slides;
+    public final DepositSubsystem deposit;
+    public final ArmSubsystem arm;
+    public final SlidesSubsystem slides;
     public final DrivetrainSubsystem drivetrain;
 
     /* local OpMode members. */
@@ -57,6 +59,7 @@ public class Robot19397 extends Robot {
         this.drivetrain = new DrivetrainSubsystem();
         this.arm = new ArmSubsystem();
         this.slides = new SlidesSubsystem();
+        this.deposit = new DepositSubsystem();
     }
 
     /* Initialize standard Hardware interfaces */
@@ -73,6 +76,8 @@ public class Robot19397 extends Robot {
         CommandScheduler.getInstance().registerSubsystem(this.arm);
         slides.init(timer, ahwMap, isTeleop);
         CommandScheduler.getInstance().registerSubsystem(this.slides);
+        deposit.init(timer, ahwMap, isTeleop);
+        CommandScheduler.getInstance().registerSubsystem(this.deposit);
     }
 
  }
