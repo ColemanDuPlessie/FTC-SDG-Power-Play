@@ -4,6 +4,7 @@ import static java.lang.Math.abs;
 import static java.lang.Math.pow;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.backend.cv.PoleDetection;
 import org.opencv.calib3d.Calib3d;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -20,6 +21,8 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import kotlin.NotImplementedError;
+
 public class PoleLocalizationPipeline extends OpenCvPipeline {
 
     private final Mat CALIB_PARAMS = Mat.zeros(3, 3, CvType.CV_32FC1);
@@ -31,7 +34,6 @@ public class PoleLocalizationPipeline extends OpenCvPipeline {
     private final double cx = 319.495/2; // 0.37500; // 361.418117; // 580.850545?
     private double cy = 242.502/2; // 0.64583; // 153.041358; // 245.959325?
     // private final Mat camera_matrix = new Mat(3, 3, );
-    private final Telemetry telemetry;
 
     private Mat ans = new Mat();
     private Mat crMat = new Mat();
@@ -53,9 +55,10 @@ public class PoleLocalizationPipeline extends OpenCvPipeline {
     private static final Scalar BASE_DISPLAY_COLOR = new Scalar(255, 0, 0);
     private static final int CONTOUR_DISPLAY_THICKNESS = 1;
 
-    public PoleLocalizationPipeline(Telemetry t) {
-        this.telemetry = t;
-    }
+    private ArrayList<PoleDetection> detections = new ArrayList<PoleDetection>();
+
+    public PoleLocalizationPipeline() {}
+    public PoleLocalizationPipeline(Telemetry t) {}
 
     @Override
     public void init(Mat frame) {
@@ -71,14 +74,14 @@ public class PoleLocalizationPipeline extends OpenCvPipeline {
     }
 
     @Override
-    public Mat processFrame(Mat input) {
-        telemetry.clear(); // TODO
-
-
+    public synchronized Mat processFrame(Mat input) {
         Imgproc.cvtColor(input, ans, Imgproc.COLOR_RGB2YCrCb);
         ArrayList<MatOfPoint> contoursList = findPoleContours(ans);
 
         ArrayList<Point[]> tops = getPoleTopEdge(contoursList);
+
+        detections.clear();
+
         for (Point[] top : tops) {
             ArrayList<Point> points = new ArrayList<>(Arrays.asList(top));
             ArrayList<double[]> pointAngles = getPointAngles(points);
@@ -86,8 +89,7 @@ public class PoleLocalizationPipeline extends OpenCvPipeline {
             double poleHeightAngle = abs(pointAngles.get(1)[1]);
             double poleTopDist = POLE_WIDTH/(2*Math.tan(poleWidthAngle/2));
             double poleTrueDist = Math.cos(poleHeightAngle)*poleTopDist;
-            telemetry.addData("Distance", poleTrueDist);
-            telemetry.addData("Heading", pointAngles.get(1)[0]*180/Math.PI);
+            detections.add(new PoleDetection((int)poleTrueDist, Math.PI/2-pointAngles.get(1)[0]));
         }
 
 
@@ -111,8 +113,18 @@ public class PoleLocalizationPipeline extends OpenCvPipeline {
             Imgproc.drawMarker(ans, base, BASE_DISPLAY_COLOR, 3, CONTOUR_DISPLAY_THICKNESS*4);
         }
         */
-        telemetry.update(); // TODO
         return ans;
+    }
+
+    public synchronized ArrayList<PoleDetection> getDetections() {return (ArrayList<PoleDetection>)detections.clone();}
+
+    public synchronized void debug(Telemetry t) {
+        for (PoleDetection d : (ArrayList<PoleDetection>)detections.clone()) {
+            if (d == null) {break;}
+            t.addLine();
+            t.addData("Distance", d.getR());
+            t.addData("Heading", d.getTheta()*180/Math.PI);
+        }
     }
 
     private ArrayList<Point[]> getPoleTopEdge(ArrayList<MatOfPoint> poleContours) {

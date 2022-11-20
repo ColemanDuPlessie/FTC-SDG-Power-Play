@@ -29,14 +29,13 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import static java.lang.Thread.sleep;
-
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.backend.CommandbasedOpmode;
+import org.firstinspires.ftc.teamcode.backend.commands.AutoTargetPole;
 import org.firstinspires.ftc.teamcode.backend.commands.DriveFromGamepad;
 
 
@@ -54,7 +53,7 @@ public class Teleop extends CommandbasedOpmode {
 
     @Override
     public void start() {
-        scheduler.schedule(new DriveFromGamepad(robot.drivetrain, pad1, SetDrivingStyle.isFieldCentric));
+        scheduler.setDefaultCommand(robot.drivetrain, new DriveFromGamepad(robot.drivetrain, pad1, SetDrivingStyle.isFieldCentric));
 
         GamepadEx gamepad = new GamepadEx(gamepad1);
 
@@ -74,6 +73,8 @@ public class Teleop extends CommandbasedOpmode {
                 .whenReleased(new InstantCommand(() -> robot.deposit.hold(), robot.deposit));
         gamepad.getGamepadButton(GamepadKeys.Button.X)
                 .whenReleased(new InstantCommand(() -> robot.deposit.deposit(), robot.deposit));
+        gamepad.getGamepadButton(GamepadKeys.Button.Y)
+                .whenPressed(new AutoTargetPole(robot.drivetrain, robot.camera, timer, pad1, gamepad.getGamepadButton(GamepadKeys.Button.Y)), true);
     }
 
     @Override
@@ -85,5 +86,11 @@ public class Teleop extends CommandbasedOpmode {
         telemetry.addData("Slides pos", robot.slides.getPosition());
         telemetry.addData("Target pos", robot.slides.getTargetPosition());
         telemetry.addData("Slides spd", robot.slides.motor.getPower());
+        telemetry.addData("Driving", scheduler.requiring(robot.drivetrain));
+        AutoTargetPole vision = (AutoTargetPole)scheduler.requiring(robot.camera);
+        if (vision != null) {
+            telemetry.addLine();
+            vision.debug(telemetry);
+        }
     }
 }

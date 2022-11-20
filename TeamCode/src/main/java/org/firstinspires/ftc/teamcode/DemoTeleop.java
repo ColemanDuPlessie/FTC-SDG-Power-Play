@@ -87,11 +87,4 @@ public class DemoTeleop extends CommandbasedOpmode {
     @Override
     public void loop() {
     }
-
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
-    @Override
-    public void stop() {
-    }
 }

@@ -35,6 +35,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.backend.subsystems.ArmSubsystem;
+import org.firstinspires.ftc.teamcode.backend.subsystems.CameraSubsystem;
 import org.firstinspires.ftc.teamcode.backend.subsystems.DepositSubsystem;
 import org.firstinspires.ftc.teamcode.backend.subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.backend.subsystems.SlidesSubsystem;
@@ -48,6 +49,7 @@ public class Robot19397 extends Robot {
     public final ArmSubsystem arm;
     public final SlidesSubsystem slides;
     public final DrivetrainSubsystem drivetrain;
+    public final CameraSubsystem camera;
 
     /* local OpMode members. */
     HardwareMap hwMap;
@@ -60,24 +62,29 @@ public class Robot19397 extends Robot {
         this.arm = new ArmSubsystem();
         this.slides = new SlidesSubsystem();
         this.deposit = new DepositSubsystem();
+        this.camera = new CameraSubsystem();
     }
 
     /* Initialize standard Hardware interfaces */
-    public void init(HardwareMap ahwMap) {
-        this.init(ahwMap, false);
+    public void init(HardwareMap hwMap) {
+        this.init(hwMap, false);
     }
 
-    public void init(HardwareMap ahwMap, boolean isTeleop) {
+    public void init(HardwareMap hwMap, boolean isTeleop) {
         // Save reference to Hardware map
-        hwMap = ahwMap;
-        this.drivetrain.init(ahwMap, isTeleop);
+        this.hwMap = hwMap;
+        this.drivetrain.init(hwMap, isTeleop);
         CommandScheduler.getInstance().registerSubsystem(this.drivetrain);
-        arm.init(timer, ahwMap, isTeleop);
+        arm.init(timer, hwMap, isTeleop);
         CommandScheduler.getInstance().registerSubsystem(this.arm);
-        slides.init(timer, ahwMap, isTeleop);
+        slides.init(timer, hwMap, isTeleop);
         CommandScheduler.getInstance().registerSubsystem(this.slides);
-        deposit.init(timer, ahwMap, isTeleop);
+        deposit.init(timer, hwMap, isTeleop);
         CommandScheduler.getInstance().registerSubsystem(this.deposit);
+        if (isTeleop) { // TODO
+            camera.init(hwMap, CameraSubsystem.pipelineType.POLE_LOCALIZER);
+            CommandScheduler.getInstance().registerSubsystem(this.camera);
+        }
     }
 
  }
