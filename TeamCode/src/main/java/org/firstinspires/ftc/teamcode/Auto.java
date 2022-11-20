@@ -150,7 +150,7 @@ public class Auto extends CommandbasedOpmode {
      * Code to run ONCE after the driver hits STOP
      */
     @Override
-    public void stop() {
+    public void end() {
         AutoToTeleopContainer.getInstance().setAngleDelta(startHeading-robot.drivetrain.getHeading()+Math.toRadians(180));
     }
 }

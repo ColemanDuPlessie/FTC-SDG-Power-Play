@@ -90,4 +90,12 @@ public abstract class CommandbasedOpmode extends OpMode {
         }
     }
 
+    @Override
+    public final void stop() {
+        end();
+        reset();
+    }
+
+    public void end() {}
+
 }
