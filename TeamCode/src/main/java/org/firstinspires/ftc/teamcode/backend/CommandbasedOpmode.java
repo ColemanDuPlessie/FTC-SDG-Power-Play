@@ -64,6 +64,7 @@ public abstract class CommandbasedOpmode extends OpMode {
     @Override
     public void internalPreInit() {
         super.internalPreInit();
+        reset();
         PhotonCore.enable();
         pad1 = new GamepadWrapper(gamepad1);
         pad2 = new GamepadWrapper(gamepad2);
