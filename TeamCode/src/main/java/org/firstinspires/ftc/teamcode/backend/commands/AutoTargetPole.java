@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.backend.commands;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -18,6 +19,7 @@ import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
 
+@Config
 public class AutoTargetPole extends CommandBase {
 
     private final DrivetrainSubsystem dt;
@@ -33,6 +35,7 @@ public class AutoTargetPole extends CommandBase {
     public static double kPs = 0.01;
     public static double kIs = 0.0001;
     public static double kDs = 0.03;
+    public static double kTurn = 1.5;
 
     private final PIDController forwardPID;
     private final PIDController strafePID;
@@ -74,7 +77,7 @@ public class AutoTargetPole extends CommandBase {
         }
         double forward = forwardPID.update(targetPole.y, 0);
         double strafe = strafePID.update(targetPole.x, 0);
-        dt.driveSimple(forward, turn, strafe, speedMult);
+        dt.driveSimple(forward, turn, strafe+turn*kTurn, speedMult);
     }
 
     @Override
