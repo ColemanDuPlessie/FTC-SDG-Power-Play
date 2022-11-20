@@ -29,10 +29,6 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import static java.lang.Thread.sleep;
-
-import com.arcrobotics.ftclib.command.Command;
-import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -78,7 +74,7 @@ public class Teleop extends CommandbasedOpmode {
         gamepad.getGamepadButton(GamepadKeys.Button.X)
                 .whenReleased(new InstantCommand(() -> robot.deposit.deposit(), robot.deposit));
         gamepad.getGamepadButton(GamepadKeys.Button.Y)
-                .whenReleased(new AutoTargetPole(robot.drivetrain, robot.camera, timer, pad1));
+                .whenPressed(new AutoTargetPole(robot.drivetrain, robot.camera, timer, pad1, gamepad.getGamepadButton(GamepadKeys.Button.Y)), true);
     }
 
     @Override
@@ -90,7 +86,8 @@ public class Teleop extends CommandbasedOpmode {
         telemetry.addData("Slides pos", robot.slides.getPosition());
         telemetry.addData("Target pos", robot.slides.getTargetPosition());
         telemetry.addData("Slides spd", robot.slides.motor.getPower());
-        AutoTargetPole vision = (AutoTargetPole)CommandScheduler.getInstance().requiring(robot.camera);
+        telemetry.addData("Driving", scheduler.requiring(robot.drivetrain));
+        AutoTargetPole vision = (AutoTargetPole)scheduler.requiring(robot.camera);
         if (vision != null) {
             telemetry.addLine();
             vision.debug(telemetry);

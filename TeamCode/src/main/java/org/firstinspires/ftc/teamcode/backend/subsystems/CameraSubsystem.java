@@ -3,18 +3,10 @@ package org.firstinspires.ftc.teamcode.backend.subsystems;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.AutoToTeleopContainer;
-import org.firstinspires.ftc.teamcode.backend.cv.pipelines.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.backend.cv.pipelines.PoleLocalizationPipeline;
-import org.firstinspires.ftc.teamcode.backend.utilities.PositionControlled;
-import org.firstinspires.ftc.teamcode.backend.utilities.controllers.ArmPIDFController;
-import org.firstinspires.ftc.teamcode.backend.utilities.controllers.PIDController;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -30,7 +22,7 @@ public class CameraSubsystem extends SubsystemBase {
 
     public enum pipelineType {
         SLEEVE_DETECTOR,
-        POLE_LOCALIZER;
+        POLE_LOCALIZER
     }
 
     public void init(HardwareMap ahwMap, pipelineType p) {
@@ -40,9 +32,17 @@ public class CameraSubsystem extends SubsystemBase {
         }
         int cameraMonitorViewId = ahwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", ahwMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(ahwMap.get(WebcamName.class, "Webcam"), cameraMonitorViewId);
+        camera.setPipeline(pipeline);
         FtcDashboard.getInstance().startCameraStream(camera, 0);
-        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
-            public void onOpened() {}
+        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
+            @Override
+            public void onOpened()
+            {
+                camera.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
+            }
+
+            @Override
             public void onError(int errorCode) {}
         });
     }

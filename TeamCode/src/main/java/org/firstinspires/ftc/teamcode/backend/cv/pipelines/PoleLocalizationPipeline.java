@@ -21,6 +21,8 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import kotlin.NotImplementedError;
+
 public class PoleLocalizationPipeline extends OpenCvPipeline {
 
     private final Mat CALIB_PARAMS = Mat.zeros(3, 3, CvType.CV_32FC1);
@@ -72,7 +74,7 @@ public class PoleLocalizationPipeline extends OpenCvPipeline {
     }
 
     @Override
-    public Mat processFrame(Mat input) {
+    public synchronized Mat processFrame(Mat input) {
         Imgproc.cvtColor(input, ans, Imgproc.COLOR_RGB2YCrCb);
         ArrayList<MatOfPoint> contoursList = findPoleContours(ans);
 
@@ -114,7 +116,16 @@ public class PoleLocalizationPipeline extends OpenCvPipeline {
         return ans;
     }
 
-    public ArrayList<PoleDetection> getDetections() {return detections;}
+    public synchronized ArrayList<PoleDetection> getDetections() {return (ArrayList<PoleDetection>)detections.clone();}
+
+    public synchronized void debug(Telemetry t) {
+        for (PoleDetection d : (ArrayList<PoleDetection>)detections.clone()) {
+            if (d == null) {break;}
+            t.addLine();
+            t.addData("Distance", d.getR());
+            t.addData("Heading", d.getTheta()*180/Math.PI);
+        }
+    }
 
     private ArrayList<Point[]> getPoleTopEdge(ArrayList<MatOfPoint> poleContours) {
         ArrayList<Point[]> tops = new ArrayList<>();

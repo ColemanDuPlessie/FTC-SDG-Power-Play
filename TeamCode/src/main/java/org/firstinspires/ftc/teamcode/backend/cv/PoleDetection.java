@@ -27,7 +27,7 @@ public class PoleDetection {
     public int getX() {return x;}
     public int getY() {return y;}
     public int getR() {return (int)sqrt(x*x+y*y);}
-    public double getTheta() {return atan2(x, y);}
+    public double getTheta() {return atan2(y, x);}
 
     public PoleDetection plus(int x, int y) {return new PoleDetection(this.x+x, this.y+y);}
     public PoleDetection plus(PoleDetection other) {return new PoleDetection(this.x+other.x, this.y+other.y);}
