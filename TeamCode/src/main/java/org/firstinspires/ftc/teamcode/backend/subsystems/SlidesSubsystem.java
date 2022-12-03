@@ -20,7 +20,7 @@ public class SlidesSubsystem extends SubsystemBase implements PositionControlled
     private PIDController PIDF;
 
     public static int minPosition = 0; // We don't actually want to go all the way down.
-    public static int maxPosition = 1600;
+    public static int maxPosition = 2000;
 
     public static double kP = 0.008;
     public static double kI = 0.0000;
@@ -28,7 +28,7 @@ public class SlidesSubsystem extends SubsystemBase implements PositionControlled
     public static double kG = 0.4;
     public static double maxPower = 0.75;
     public static double edgePower = 0.25;
-    public static int edgeDistance = 200;
+    public static int edgeDistance = 250;
 
     private int targetPosition;
 
