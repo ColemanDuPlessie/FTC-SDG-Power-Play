@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.backend.utilities;
 
 import java.util.function.Supplier;
 
-public class ToggleButton implements ButtonWrapper, Supplier<Boolean>{
+public class ToggleButton implements Supplier<Boolean>{
 
     private final Supplier<Boolean> getter;
     private boolean isAlreadyDown;
