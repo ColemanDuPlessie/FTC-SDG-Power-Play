@@ -9,25 +9,23 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AutoToTeleopContainer;
 import org.firstinspires.ftc.teamcode.backend.utilities.PositionControlled;
-import org.firstinspires.ftc.teamcode.backend.utilities.controllers.GravityPIDFController;
 import org.firstinspires.ftc.teamcode.backend.utilities.controllers.PIDController;
 
 @Config
-public class SlidesSubsystem extends SubsystemBase implements PositionControlled {
+public class IntakeSlidesSubsystem extends SubsystemBase implements PositionControlled {
 
     public DcMotor motor;
 
     private PIDController PIDF;
 
-    public static int minPosition = 0; // We don't actually want to go all the way down.
-    public static int maxPosition = 2000;
+    public static int minPosition = 0;
+    public static int maxPosition = 1150;
 
     public static double kP = 0.008;
     public static double kI = 0.0000;
     public static double kD = 0.0001;
-    public static double kG = 0.4;
-    public static double maxPower = 0.75;
-    public static double edgePower = 0.25;
+    public static double maxPower = 1;
+    public static double edgePower = 0.35;
     public static int edgeDistance = 400;
 
     private int targetPosition;
@@ -35,7 +33,7 @@ public class SlidesSubsystem extends SubsystemBase implements PositionControlled
     private int startPosition;
 
     public void init(ElapsedTime aTimer, HardwareMap ahwMap) {
-        motor = ahwMap.get(DcMotor.class, "SlidesMotor");
+        motor = ahwMap.get(DcMotor.class, "IntakeSlidesMotor");
         motor.setDirection(DcMotorSimple.Direction.FORWARD);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         startPosition = motor.getCurrentPosition();
@@ -44,17 +42,17 @@ public class SlidesSubsystem extends SubsystemBase implements PositionControlled
     }
 
     public void init(ElapsedTime aTimer, HardwareMap ahwMap, boolean isTeleop) {
-        motor = ahwMap.get(DcMotor.class, "SlidesMotor");
+        motor = ahwMap.get(DcMotor.class, "IntakeSlidesMotor");
         motor.setDirection(DcMotorSimple.Direction.FORWARD);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         if (isTeleop) {
-            Integer position = AutoToTeleopContainer.getInstance().getSlidesPosition();
+            Integer position = AutoToTeleopContainer.getInstance().getIntakeSlidesPosition();
             if (position == null) {
                 startPosition = motor.getCurrentPosition();
             } else { startPosition = position;}
         } else {
             startPosition = motor.getCurrentPosition();
-            AutoToTeleopContainer.getInstance().setSlidesPosition(startPosition);
+            AutoToTeleopContainer.getInstance().setIntakeSlidesPosition(startPosition);
         }
         targetPosition = 0;
         PIDF = new PIDController(kP, kI, kD, aTimer);
@@ -76,8 +74,8 @@ public class SlidesSubsystem extends SubsystemBase implements PositionControlled
     @Override
     public void periodic() {
         int currentPosition = motor.getCurrentPosition();
-        double powerMultThrottle = edgePower + (maxPower - edgePower) * Math.min(((double)(Math.abs(currentPosition-targetPosition)))/edgeDistance, 1.0);
-        motor.setPower(Math.min(powerMultThrottle, Math.max(PIDF.update(motor.getCurrentPosition()-startPosition, targetPosition) * powerMultThrottle, -powerMultThrottle)) + kG);
+        double powerMultThrottle = edgePower + (maxPower - edgePower) * Math.min(((double)(Math.min(Math.abs(currentPosition-minPosition), Math.abs(currentPosition-maxPosition))))/edgeDistance, 1.0);
+        motor.setPower(Math.min(powerMultThrottle, Math.max(PIDF.update(motor.getCurrentPosition()-startPosition, targetPosition) * powerMultThrottle, -powerMultThrottle)));
     }
 
 }

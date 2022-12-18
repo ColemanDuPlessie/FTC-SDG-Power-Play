@@ -38,6 +38,8 @@ import org.firstinspires.ftc.teamcode.backend.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.backend.subsystems.CameraSubsystem;
 import org.firstinspires.ftc.teamcode.backend.subsystems.DepositSubsystem;
 import org.firstinspires.ftc.teamcode.backend.subsystems.DrivetrainSubsystem;
+import org.firstinspires.ftc.teamcode.backend.subsystems.IntakeSlidesSubsystem;
+import org.firstinspires.ftc.teamcode.backend.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.backend.subsystems.SlidesSubsystem;
 
 /**
@@ -48,6 +50,8 @@ public class Robot19397 extends Robot {
     public final DepositSubsystem deposit;
     public final ArmSubsystem arm;
     public final SlidesSubsystem slides;
+    public final IntakeSubsystem intake;
+    public final IntakeSlidesSubsystem intakeSlides;
     public final DrivetrainSubsystem drivetrain;
     public final CameraSubsystem camera;
 
@@ -61,6 +65,8 @@ public class Robot19397 extends Robot {
         this.drivetrain = new DrivetrainSubsystem();
         this.arm = new ArmSubsystem();
         this.slides = new SlidesSubsystem();
+        this.intake = new IntakeSubsystem();
+        this.intakeSlides = new IntakeSlidesSubsystem();
         this.deposit = new DepositSubsystem();
         this.camera = new CameraSubsystem();
     }
@@ -79,6 +85,10 @@ public class Robot19397 extends Robot {
         CommandScheduler.getInstance().registerSubsystem(this.arm);
         slides.init(timer, hwMap, isTeleop);
         CommandScheduler.getInstance().registerSubsystem(this.slides);
+        intake.init(timer, hwMap, isTeleop);
+        CommandScheduler.getInstance().registerSubsystem(this.intake);
+        intakeSlides.init(timer, hwMap, isTeleop);
+        CommandScheduler.getInstance().registerSubsystem(this.intakeSlides);
         deposit.init(timer, hwMap, isTeleop);
         CommandScheduler.getInstance().registerSubsystem(this.deposit);
         if (isTeleop) { // TODO
