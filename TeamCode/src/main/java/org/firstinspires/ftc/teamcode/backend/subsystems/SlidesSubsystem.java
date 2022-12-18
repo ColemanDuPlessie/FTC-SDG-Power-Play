@@ -28,7 +28,7 @@ public class SlidesSubsystem extends SubsystemBase implements PositionControlled
     public static double kG = 0.4;
     public static double maxPower = 0.75;
     public static double edgePower = 0.25;
-    public static int edgeDistance = 250;
+    public static int edgeDistance = 400;
 
     private int targetPosition;
 
@@ -40,7 +40,7 @@ public class SlidesSubsystem extends SubsystemBase implements PositionControlled
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         startPosition = motor.getCurrentPosition();
         targetPosition = 0;
-        PIDF = new GravityPIDFController(kP, kI, kD, aTimer, kG);
+        PIDF = new PIDController(kP, kI, kD, aTimer);
     }
 
     public void init(ElapsedTime aTimer, HardwareMap ahwMap, boolean isTeleop) {
@@ -76,7 +76,7 @@ public class SlidesSubsystem extends SubsystemBase implements PositionControlled
     @Override
     public void periodic() {
         int currentPosition = motor.getCurrentPosition();
-        double powerMultThrottle = edgePower + (maxPower - edgePower) * Math.min(((double)(Math.min(Math.abs(currentPosition-minPosition), Math.abs(currentPosition-maxPosition))))/edgeDistance, 1.0);
+        double powerMultThrottle = edgePower + (maxPower - edgePower) * Math.min(((double)(Math.min(Math.abs(currentPosition-targetPosition), Math.abs(currentPosition-targetPosition))))/edgeDistance, 1.0);
         motor.setPower(Math.min(powerMultThrottle, Math.max(PIDF.update(motor.getCurrentPosition()-startPosition, targetPosition) * powerMultThrottle, -powerMultThrottle)) + kG);
     }
 
