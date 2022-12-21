@@ -19,18 +19,20 @@ public class IntakeSubsystem extends SubsystemBase implements PositionControlled
 
     public ServoImpl servo;
 
-    public static double downPosition = 0.0;
-    public static double upPosition = 0.3;
+    public static double downPosition = 0.55;
+    public static double upPosition = 0.2;
 
 
     private double targetPosition = downPosition;
 
     public void init(ElapsedTime aTimer, HardwareMap ahwMap) {
         servo = ahwMap.get(ServoImpl.class, "IntakeServo");
+        raise();
     }
 
     public void init(ElapsedTime aTimer, HardwareMap ahwMap, boolean isTeleop) {
         servo = ahwMap.get(ServoImpl.class, "IntakeServo");
+        raise();
     }
 
     public double getTargetPosition() {return targetPosition;}
@@ -50,5 +52,13 @@ public class IntakeSubsystem extends SubsystemBase implements PositionControlled
 
     public void raise() {setTargetPosition(upPosition);}
     public void lower() {setTargetPosition(downPosition);}
+
+    public void toggle() {
+        if (getTargetPosition() > (upPosition+downPosition)/2) {
+            lower();
+        } else {
+            raise();
+        }
+    }
 
 }

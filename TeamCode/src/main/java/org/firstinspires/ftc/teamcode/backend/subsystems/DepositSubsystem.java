@@ -45,4 +45,13 @@ public class DepositSubsystem extends SubsystemBase {
     public void intake() {setSpeed(1.0);}
     public void hold() {setSpeed(0.0);}
     public void deposit() {setSpeed(-1.0);}
+
+    public void toggleIntake() {
+        if (getCurrentSpeed() == 1.0) {setSpeed(0.0);
+        } else {setSpeed(1.0);}
+    }
+    public void toggleDeposit() {
+        if (getCurrentSpeed() == -1.0) {setSpeed(0.0);
+        } else {setSpeed(-1.0);}
+    }
 }

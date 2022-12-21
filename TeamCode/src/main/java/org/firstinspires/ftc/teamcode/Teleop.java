@@ -36,7 +36,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.backend.CommandbasedOpmode;
 import org.firstinspires.ftc.teamcode.backend.commands.AutoTargetPole;
-import org.firstinspires.ftc.teamcode.backend.commands.ControlConeIntake;
 import org.firstinspires.ftc.teamcode.backend.commands.DriveFromGamepad;
 
 
@@ -55,7 +54,6 @@ public class Teleop extends CommandbasedOpmode {
     @Override
     public void start() {
         scheduler.setDefaultCommand(robot.drivetrain, new DriveFromGamepad(robot.drivetrain, pad1, SetDrivingStyle.isFieldCentric));
-        scheduler.setDefaultCommand(robot.intake, new ControlConeIntake(robot.intake, robot.intakeSlides));
 
         GamepadEx gamepad = new GamepadEx(gamepad1);
 
@@ -75,11 +73,11 @@ public class Teleop extends CommandbasedOpmode {
                 .whenReleased(new InstantCommand(() -> robot.intakeSlides.incrementTargetPosition(-0.2), robot.intakeSlides));
 
         gamepad.getGamepadButton(GamepadKeys.Button.A)
-                .whenReleased(new InstantCommand(() -> robot.deposit.intake(), robot.deposit));
+                .whenReleased(new InstantCommand(() -> robot.deposit.toggleIntake(), robot.deposit));
         gamepad.getGamepadButton(GamepadKeys.Button.B)
-                .whenReleased(new InstantCommand(() -> robot.deposit.hold(), robot.deposit));
+                .whenReleased(new InstantCommand(() -> robot.deposit.toggleDeposit(), robot.deposit));
         gamepad.getGamepadButton(GamepadKeys.Button.X)
-                .whenReleased(new InstantCommand(() -> robot.deposit.deposit(), robot.deposit));
+                .whenReleased(new InstantCommand(() -> robot.intake.toggle(), robot.intake));
         gamepad.getGamepadButton(GamepadKeys.Button.Y)
                 .whenPressed(new AutoTargetPole(robot.drivetrain, robot.camera, timer, pad1, gamepad.getGamepadButton(GamepadKeys.Button.Y)), true);
     }

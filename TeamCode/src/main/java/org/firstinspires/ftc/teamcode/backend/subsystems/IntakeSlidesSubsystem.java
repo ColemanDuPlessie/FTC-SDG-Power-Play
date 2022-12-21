@@ -18,8 +18,8 @@ public class IntakeSlidesSubsystem extends SubsystemBase implements PositionCont
 
     private PIDController PIDF;
 
-    public static int minPosition = 0;
-    public static int maxPosition = 1150;
+    public static int minPosition = -30;
+    public static int maxPosition = 1100;
 
     public static double kP = 0.008;
     public static double kI = 0.0000;
