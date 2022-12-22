@@ -19,7 +19,7 @@ public class IntakeSubsystem extends SubsystemBase implements PositionControlled
 
     public ServoImpl servo;
 
-    public static double downPosition = 0.55;
+    public static double downPosition = 0.58;
     public static double upPosition = 0.2;
 
 
@@ -54,7 +54,7 @@ public class IntakeSubsystem extends SubsystemBase implements PositionControlled
     public void lower() {setTargetPosition(downPosition);}
 
     public void toggle() {
-        if (getTargetPosition() > (upPosition+downPosition)/2) {
+        if (getTargetPosition() == upPosition) {
             lower();
         } else {
             raise();
