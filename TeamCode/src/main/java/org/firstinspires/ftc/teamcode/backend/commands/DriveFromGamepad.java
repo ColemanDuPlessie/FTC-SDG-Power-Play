@@ -12,7 +12,7 @@ public class DriveFromGamepad extends CommandBase {
     private final boolean isFieldCentric;
 
     private final double topSpeed = 1.0;
-    private final double defaultSpeed = 0.8;
+    private final double defaultSpeed = 0.9;
     private final double minSpeed = 0.25;
 
     public DriveFromGamepad(DrivetrainSubsystem dt, GamepadWrapper gamepad, boolean fieldCentric) {
