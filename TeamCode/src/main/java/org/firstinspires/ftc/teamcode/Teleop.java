@@ -77,7 +77,7 @@ public class Teleop extends CommandbasedOpmode {
         gamepad.getGamepadButton(GamepadKeys.Button.B)
                 .whenReleased(new InstantCommand(() -> robot.deposit.toggleDeposit(), robot.deposit));
         gamepad.getGamepadButton(GamepadKeys.Button.X)
-                .whenReleased(new InstantCommand(() -> robot.intake.toggle(), robot.intake));
+                .whenReleased(new InstantCommand(() -> {robot.slides.setTargetPosition(0.0); robot.arm.setTargetPosition(0.6);}, robot.slides, robot.arm));
         gamepad.getGamepadButton(GamepadKeys.Button.Y)
                 .whenPressed(new AutoTargetPole(robot.drivetrain, robot.camera, timer, pad1, gamepad.getGamepadButton(GamepadKeys.Button.Y)), true);
     }
