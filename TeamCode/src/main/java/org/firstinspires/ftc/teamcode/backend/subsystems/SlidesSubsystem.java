@@ -16,16 +16,17 @@ import org.firstinspires.ftc.teamcode.backend.utilities.controllers.PIDControlle
 public class SlidesSubsystem extends SubsystemBase implements PositionControlled {
 
     public DcMotor motor;
+    private DcMotor followerMotor;
 
     private PIDController PIDF;
 
     public static int minPosition = 0; // We don't actually want to go all the way down.
     public static int maxPosition = 2570;
 
-    public static double kP = 0.008;
+    public static double kP = 0.006;
     public static double kI = 0.0000;
-    public static double kD = 0.0001;
-    public static double kG = 0.4;
+    public static double kD = 0.00005;
+    public static double kG = 0.25;
     public static double maxPower = 0.75;
     public static double edgePower = 0.25;
     public static int edgeDistance = 400;
@@ -36,8 +37,11 @@ public class SlidesSubsystem extends SubsystemBase implements PositionControlled
 
     public void init(ElapsedTime aTimer, HardwareMap ahwMap) {
         motor = ahwMap.get(DcMotor.class, "SlidesMotor");
+        followerMotor = ahwMap.get(DcMotor.class, "SlidesFollowerMotor");
         motor.setDirection(DcMotorSimple.Direction.FORWARD);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        followerMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        followerMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         startPosition = motor.getCurrentPosition();
         targetPosition = 0;
         PIDF = new PIDController(kP, kI, kD, aTimer);
@@ -45,8 +49,11 @@ public class SlidesSubsystem extends SubsystemBase implements PositionControlled
 
     public void init(ElapsedTime aTimer, HardwareMap ahwMap, boolean isTeleop) {
         motor = ahwMap.get(DcMotor.class, "SlidesMotor");
+        followerMotor = ahwMap.get(DcMotor.class, "SlidesFollowerMotor");
         motor.setDirection(DcMotorSimple.Direction.FORWARD);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        followerMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        followerMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         if (isTeleop) {
             Integer position = AutoToTeleopContainer.getInstance().getSlidesPosition();
             if (position == null) {
@@ -77,7 +84,9 @@ public class SlidesSubsystem extends SubsystemBase implements PositionControlled
     public void periodic() {
         int currentPosition = motor.getCurrentPosition();
         double powerMultThrottle = edgePower + (maxPower - edgePower) * Math.min(((double)(Math.abs(currentPosition-targetPosition)))/edgeDistance, 1.0);
-        motor.setPower(Math.min(powerMultThrottle, Math.max(PIDF.update(motor.getCurrentPosition()-startPosition, targetPosition) * powerMultThrottle, -powerMultThrottle)) + kG);
+        double actualPower = Math.min(powerMultThrottle, Math.max(PIDF.update(motor.getCurrentPosition()-startPosition, targetPosition) * powerMultThrottle, -powerMultThrottle)) + kG;
+        motor.setPower(actualPower);
+        followerMotor.setPower(actualPower);
     }
 
 }
