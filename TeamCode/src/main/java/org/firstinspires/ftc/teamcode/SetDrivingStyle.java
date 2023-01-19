@@ -46,7 +46,7 @@ public class SetDrivingStyle extends CommandbasedOpmode {
     ToggleButton xToggle;
     ToggleButton yToggle;
 
-    public static boolean buttonstyleHolds = false;
+    public static boolean startOnRight = false;
     public static boolean isFieldCentric   = false;
     public static boolean isBlue           = false;
 
@@ -61,11 +61,11 @@ public class SetDrivingStyle extends CommandbasedOpmode {
 
     @Override
     public void init_loop() {
-        buttonstyleHolds = bToggle.get();
+        startOnRight = bToggle.get();
         isFieldCentric   = xToggle.get();
         isBlue           = yToggle.get();
 
-        telemetry.addData("Button Style: (toggle with b)", buttonstyleHolds ? "Hold" : "Toggle");
+        telemetry.addData("Auto Start Position: (toggle with b)", startOnRight ? "Right" : "Left");
         telemetry.addData("Field Centric?: (toggle with x)", isFieldCentric);
         telemetry.addData("We are on the (toggle with y)", isBlue ? "Blue Alliance" : "Red Alliance");
     }

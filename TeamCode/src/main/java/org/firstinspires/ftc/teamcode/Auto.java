@@ -51,6 +51,7 @@ import org.openftc.easyopencv.OpenCvCameraException;
 public class Auto extends CommandbasedOpmode {
 
     SampleMecanumDrive drive;
+    TrajectorySequence deposit;
     TrajectorySequence L;
     TrajectorySequence C;
     TrajectorySequence R;
@@ -60,6 +61,8 @@ public class Auto extends CommandbasedOpmode {
     public double STARTX = 36;
     public double STARTY = 63;
     public double STARTTHETA = 90;
+    public double DEPOSITY = 12;
+    public double DEPOSITTHETA = STARTTHETA + 45;
     public double MIDX = 36;
     public double MIDY = 36;
     public double DRIFTX = -24;
@@ -72,6 +75,8 @@ public class Auto extends CommandbasedOpmode {
     public void init() {
         robot.init(hardwareMap, false);
 
+        if (SetDrivingStyle.startOnRight) {DEPOSITTHETA -= 90;}
+
         startHeading = robot.drivetrain.getHeading();
 
         Pose2d startPose = new Pose2d(STARTX, STARTY, Math.toRadians(STARTTHETA));
@@ -81,20 +86,24 @@ public class Auto extends CommandbasedOpmode {
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(startPose);
 
-        L = drive.trajectorySequenceBuilder(startPose)
+        Pose2d depositPose = new Pose2d(MIDX, DEPOSITY, Math.toRadians(DEPOSITTHETA));
+
+        deposit = drive.trajectorySequenceBuilder(startPose)
                 .setReversed(true)
-                .lineTo(new Vector2d(MIDX-DRIFTX, STARTY))
+                .splineToSplineHeading(new Pose2d(MIDX, DEPOSITY, Math.toRadians(DEPOSITTHETA)), Math.toRadians(DEPOSITTHETA))
+                .build();
+
+        L = drive.trajectorySequenceBuilder(depositPose)
+                .lineToLinearHeading(new Pose2d(MIDX-DRIFTX, STARTY, Math.toRadians(STARTTHETA)))
                 .lineTo(new Vector2d(MIDX-DRIFTX, MIDY))
                 .build();
 
-        C = drive.trajectorySequenceBuilder(startPose)
-                .setReversed(true)
-                .lineTo(new Vector2d(MIDX, MIDY))
+        C = drive.trajectorySequenceBuilder(depositPose)
+                .lineToLinearHeading(new Pose2d(MIDX, MIDY, Math.toRadians(STARTTHETA)))
                 .build();
 
-        R = drive.trajectorySequenceBuilder(startPose)
-                .setReversed(true)
-                .lineTo(new Vector2d(MIDX+DRIFTX, STARTY))
+        R = drive.trajectorySequenceBuilder(depositPose)
+                .lineToLinearHeading(new Pose2d(MIDX+DRIFTX, STARTY, Math.toRadians(STARTTHETA)))
                 .lineTo(new Vector2d(MIDX+DRIFTX, MIDY))
                 .build();
     }
