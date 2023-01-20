@@ -32,9 +32,12 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.backend.CommandbasedOpmode;
+import org.firstinspires.ftc.teamcode.backend.commands.DepositCone;
 import org.firstinspires.ftc.teamcode.backend.commands.FollowRRTraj;
 import org.firstinspires.ftc.teamcode.backend.cv.TeamShippingElementDetector;
 import org.firstinspires.ftc.teamcode.backend.roadrunner.drive.SampleMecanumDrive;
@@ -139,13 +142,16 @@ public class Auto extends CommandbasedOpmode {
         } catch (OpenCvCameraException e) {
             telemetry.addLine("Camera was not initialized. CV pipeline replaced by default behavior.");
         }
+        FollowRRTraj forward = new FollowRRTraj(robot.drivetrain, drive, deposit);
+        FollowRRTraj park;
         if (tagPosition == TeamShippingElementDetector.POSITIONS.ONE) {
-            scheduler.schedule(false, new FollowRRTraj(robot.drivetrain, drive, L));
-        } else if (tagPosition == TeamShippingElementDetector.POSITIONS.TWO || tagPosition == null) {
-            scheduler.schedule(false, new FollowRRTraj(robot.drivetrain, drive, C));
+            park = new FollowRRTraj(robot.drivetrain, drive, L);
         } else if (tagPosition == TeamShippingElementDetector.POSITIONS.THREE) {
-            scheduler.schedule(false, new FollowRRTraj(robot.drivetrain, drive, R));
+            park = new FollowRRTraj(robot.drivetrain, drive, R);
+        } else {
+            park = new FollowRRTraj(robot.drivetrain, drive, C);
         }
+        scheduler.schedule(false, new SequentialCommandGroup(forward, new DepositCone(robot.slides, robot.arm, robot.deposit, 0.8), park));
     }
 
     /*
