@@ -21,15 +21,16 @@ public class SlidesSubsystem extends SubsystemBase implements PositionControlled
     private PIDController PIDF;
 
     public static int minPosition = 0; // We don't actually want to go all the way down.
-    public static int maxPosition = 2370;
+    public static int maxPosition = 3050;
 
-    public static double kP = 0.006;
+    public static double kP = 0.007;
     public static double kI = 0.0000;
-    public static double kD = 0.00005;
+    public static double kD = 0.000065;
     public static double kG = 0.25;
     public static double maxPower = 0.75;
     public static double edgePower = 0.25;
     public static int edgeDistance = 400;
+    public static double overallMultiplier = 0.8;
 
     private int targetPosition;
 
@@ -73,6 +74,7 @@ public class SlidesSubsystem extends SubsystemBase implements PositionControlled
 
     public void setTargetPosition(double target) {
         targetPosition = (int)(target * (maxPosition-minPosition) + minPosition);
+        targetPosition = Math.min(Math.max(targetPosition, minPosition), maxPosition);
     }
 
     public void incrementTargetPosition(double increment) {
@@ -85,8 +87,8 @@ public class SlidesSubsystem extends SubsystemBase implements PositionControlled
         int currentPosition = motor.getCurrentPosition();
         double powerMultThrottle = edgePower + (maxPower - edgePower) * Math.min(((double)(Math.abs(currentPosition-targetPosition)))/edgeDistance, 1.0);
         double actualPower = Math.min(powerMultThrottle, Math.max(PIDF.update(motor.getCurrentPosition()-startPosition, targetPosition) * powerMultThrottle, -powerMultThrottle)) + kG;
-        motor.setPower(actualPower);
-        followerMotor.setPower(actualPower);
+        motor.setPower(actualPower*overallMultiplier);
+        followerMotor.setPower(actualPower*overallMultiplier);
     }
 
 }

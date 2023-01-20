@@ -65,7 +65,7 @@ public class Auto extends CommandbasedOpmode {
     public double STARTY = 63;
     public double STARTTHETA = 90;
     public double DEPOSITY = 12;
-    public double DEPOSITTHETA = STARTTHETA + 45;
+    public double DEPOSITTHETA = STARTTHETA - 45;
     public double MIDX = 36;
     public double MIDY = 36;
     public double DRIFTX = -24;
@@ -78,7 +78,7 @@ public class Auto extends CommandbasedOpmode {
     public void init() {
         robot.init(hardwareMap, false);
 
-        if (SetDrivingStyle.startOnRight) {DEPOSITTHETA -= 90;}
+        if (SetDrivingStyle.startOnRight) {DEPOSITTHETA += 90;}
 
         startHeading = robot.drivetrain.getHeading();
 
@@ -93,7 +93,8 @@ public class Auto extends CommandbasedOpmode {
 
         deposit = drive.trajectorySequenceBuilder(startPose)
                 .setReversed(true)
-                .splineToSplineHeading(new Pose2d(MIDX, DEPOSITY, Math.toRadians(DEPOSITTHETA)), Math.toRadians(DEPOSITTHETA))
+                .splineTo(new Vector2d(MIDX, MIDY), Math.toRadians(STARTTHETA+180))
+                .splineToSplineHeading(new Pose2d(MIDX, DEPOSITY, Math.toRadians(DEPOSITTHETA)), Math.toRadians(STARTTHETA+180))
                 .build();
 
         L = drive.trajectorySequenceBuilder(depositPose)
@@ -109,6 +110,14 @@ public class Auto extends CommandbasedOpmode {
                 .lineToLinearHeading(new Pose2d(MIDX+DRIFTX, STARTY, Math.toRadians(STARTTHETA)))
                 .lineTo(new Vector2d(MIDX+DRIFTX, MIDY))
                 .build();
+
+        robot.deposit.intake();
+        try {
+            Thread.sleep(200); // TODO this is bad
+        } catch (InterruptedException e) {
+            // TODO twice this is very bad
+        }
+        robot.deposit.hold();
     }
 
     /*
@@ -151,7 +160,10 @@ public class Auto extends CommandbasedOpmode {
         } else {
             park = new FollowRRTraj(robot.drivetrain, drive, C);
         }
-        scheduler.schedule(false, new SequentialCommandGroup(forward, new DepositCone(robot.slides, robot.arm, robot.deposit, 0.8), park));
+        scheduler.schedule(false, new SequentialCommandGroup(forward,
+                new DepositCone(robot.slides, robot.arm, robot.deposit, 0.9, timer),
+                park
+        ));
     }
 
     /*
