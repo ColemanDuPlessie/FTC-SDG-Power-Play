@@ -68,6 +68,18 @@ public class SlidesSubsystem extends SubsystemBase implements PositionControlled
         PIDF = new PIDController(kP, kI, kD, aTimer);
     }
 
+    public void uglyHackUp() {
+        minPosition += 100;
+        maxPosition += 100;
+        targetPosition += 100;
+    }
+
+    public void uglyHackDown() {
+        minPosition -= 100;
+        maxPosition -= 100;
+        targetPosition -= 100;
+    }
+
     public double getPosition() {return ((double)(motor.getCurrentPosition()-startPosition)-minPosition)/(double)(maxPosition-minPosition);}
 
     public double getTargetPosition() {return ((double)(targetPosition-startPosition)-minPosition)/(double)(maxPosition-minPosition);}
