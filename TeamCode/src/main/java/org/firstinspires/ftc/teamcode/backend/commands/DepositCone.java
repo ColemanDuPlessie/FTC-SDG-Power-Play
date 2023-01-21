@@ -15,8 +15,8 @@ public class DepositCone extends SequentialCommandGroup {
     public DepositCone(SlidesSubsystem s, ArmSubsystem a, DepositSubsystem d, double targetHeight, ElapsedTime timer) {
         addCommands(new InstantCommand(() -> prepare(a, d, targetHeight)),
                 new SmoothSetSlides(s, targetHeight, (long)(targetHeight*5000), timer),
-                new InstantCommand(() -> a.setTargetPosition(0.9)),
-                new WaitUntilCommand(() -> a.getPosition() > 0.85),
+                new InstantCommand(() -> a.setTargetPosition(0.7)),
+                new WaitUntilCommand(() -> a.getPosition() > 0.65),
                 new InstantCommand(() -> d.deposit()),
                 new WaitCommand(1000),
                 new InstantCommand(() -> a.setTargetPosition(0.2)),
