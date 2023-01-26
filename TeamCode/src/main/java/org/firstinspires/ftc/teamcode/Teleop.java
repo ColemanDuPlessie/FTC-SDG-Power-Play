@@ -58,26 +58,26 @@ public class Teleop extends CommandbasedOpmode {
         GamepadEx gamepad = new GamepadEx(gamepad1);
 
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
-                .whenReleased(new InstantCommand(() -> robot.arm.incrementTargetPosition(-0.2), robot.arm));
+                .whenReleased(() -> robot.arm.incrementTargetPosition(-0.2));
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whenReleased(new InstantCommand(() -> robot.arm.incrementTargetPosition(0.2), robot.arm));
+                .whenReleased(() -> robot.arm.incrementTargetPosition(0.2));
 
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-                .whenReleased(new InstantCommand(() -> robot.slides.incrementTargetPosition(0.33), robot.slides));
+                .whenReleased(() -> robot.slides.incrementTargetPosition(0.33));
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
-                .whenReleased(new InstantCommand(() -> robot.slides.incrementTargetPosition(-0.33), robot.slides));
+                .whenReleased(() -> robot.slides.incrementTargetPosition(-0.33));
 
         gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenReleased(new InstantCommand(() -> robot.slides.uglyHackUp(), robot.slides));
+                .whenReleased(() -> robot.slides.uglyHackUp());
         gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenReleased(new InstantCommand(() -> robot.slides.uglyHackDown(), robot.slides));
+                .whenReleased(() -> robot.slides.uglyHackDown());
 
         gamepad.getGamepadButton(GamepadKeys.Button.A)
-                .whenReleased(new InstantCommand(() -> robot.deposit.toggleIntake(), robot.deposit));
+                .whenReleased(() -> robot.deposit.toggleIntake());
         gamepad.getGamepadButton(GamepadKeys.Button.B)
-                .whenReleased(new InstantCommand(() -> robot.deposit.toggleDeposit(), robot.deposit));
+                .whenReleased(() -> robot.deposit.toggleDeposit());
         gamepad.getGamepadButton(GamepadKeys.Button.X)
-                .whenReleased(new InstantCommand(() -> {robot.slides.setTargetPosition(0.0); robot.arm.setTargetPosition(0.6);}, robot.slides, robot.arm));
+                .whenReleased(() -> {robot.slides.setTargetPosition(0.0); robot.arm.setTargetPosition(0.6);});
         gamepad.getGamepadButton(GamepadKeys.Button.Y)
                 .whenPressed(new AutoTargetPole(robot.drivetrain, robot.camera, timer, pad1, gamepad.getGamepadButton(GamepadKeys.Button.Y)), true);
     }
