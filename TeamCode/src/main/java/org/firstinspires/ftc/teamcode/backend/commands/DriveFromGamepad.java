@@ -11,8 +11,6 @@ public class DriveFromGamepad extends CommandBase {
     private final GamepadWrapper gamepad;
     private final boolean isFieldCentric;
 
-    private final double topSpeed = 1.0;
-    private final double defaultSpeed = 0.9;
     private final double minSpeed = 0.25;
 
     public DriveFromGamepad(DrivetrainSubsystem dt, GamepadWrapper gamepad, boolean fieldCentric) {
@@ -30,7 +28,7 @@ public class DriveFromGamepad extends CommandBase {
         double forward = -gamepad.getLeftStickY();
         double turn = gamepad.getRightStickX();
         double strafe = gamepad.getLeftStickX();
-        double speed = defaultSpeed + gamepad.getRightTrigger() * (topSpeed-defaultSpeed) - gamepad.getLeftTrigger() * (defaultSpeed-minSpeed);
+        double speed = 1.0 - gamepad.getLeftTrigger() * (1.0-minSpeed);
         if (isFieldCentric) {
             dt.driveFieldCentric(forward, turn, strafe, speed);
         } else {

@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -43,8 +42,8 @@ import org.firstinspires.ftc.teamcode.backend.commands.DriveFromGamepad;
  * I should probably document this...
  */
 
-@TeleOp(name="Teleop (THIS ONE)")
-public class Teleop extends CommandbasedOpmode {
+@TeleOp(name="Legacy Teleop")
+public class LegacyTeleop extends CommandbasedOpmode {
 
     @Override
     public void init() {
@@ -57,32 +56,29 @@ public class Teleop extends CommandbasedOpmode {
 
         GamepadEx gamepad = new GamepadEx(gamepad1);
 
-        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT) // TODO remap arm to R/L bumpers
-                .whenReleased(() -> robot.arm.incrementTargetPosition(-0.2)); // TODO closely inspect setpoints
-        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT) // TODO map horiz. slides to DPAD
+        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+                .whenReleased(() -> robot.arm.incrementTargetPosition(-0.2));
+        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
                 .whenReleased(() -> robot.arm.incrementTargetPosition(0.2));
 
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-                .whenReleased(() -> robot.slides.incrementTargetPosition(0.33)); // TODO closely inspect setpoints
+                .whenReleased(() -> robot.slides.incrementTargetPosition(0.33));
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                 .whenReleased(() -> robot.slides.incrementTargetPosition(-0.33));
 
         gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenReleased(() -> robot.slides.uglyHackUp()); // TODO kill this code to death and leave no survivors
+                .whenReleased(() -> robot.slides.uglyHackUp());
         gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenReleased(() -> robot.slides.uglyHackDown());
 
-        // TODO make R. trigger cycle intake arm height (5 setpoints, default to point 1, ping-pong)
-
         gamepad.getGamepadButton(GamepadKeys.Button.A)
                 .whenReleased(() -> robot.deposit.toggleIntake());
-        gamepad.getGamepadButton(GamepadKeys.Button.B) // TODO make deposit into a SequentialCommandGroup that also resets the deposit to resting position
+        gamepad.getGamepadButton(GamepadKeys.Button.B)
                 .whenReleased(() -> robot.deposit.toggleDeposit());
-        gamepad.getGamepadButton(GamepadKeys.Button.X) // TODO write a transfer SequentialCommandGroup to be mapped to X
+        gamepad.getGamepadButton(GamepadKeys.Button.X)
                 .whenReleased(() -> {robot.slides.setTargetPosition(0.0); robot.arm.setTargetPosition(0.6);});
-        gamepad.getGamepadButton(GamepadKeys.Button.Y) // TODO remap autotarget to right stick button.
+        gamepad.getGamepadButton(GamepadKeys.Button.Y)
                 .whenPressed(new AutoTargetPole(robot.drivetrain, robot.camera, timer, pad1, gamepad.getGamepadButton(GamepadKeys.Button.Y)), true);
-        // TODO map Y to toggling intake claw
     }
 
     @Override
