@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.backend.utilities.controllers.ArmPIDFContr
 import org.firstinspires.ftc.teamcode.backend.utilities.controllers.PIDController;
 
 @Config
-public class IntakeSubsystem extends SubsystemBase implements PositionControlled {
+public class IntakeSubsystem extends SubsystemBase {
 
     public ServoImpl servo;
 
@@ -42,12 +42,6 @@ public class IntakeSubsystem extends SubsystemBase implements PositionControlled
 
     public void setTargetPosition(double target) {
         targetPosition = target;
-        servo.setPosition(targetPosition);
-    }
-
-    public void incrementTargetPosition(double increment) {
-        targetPosition += targetPosition;
-        targetPosition = Math.min(Math.max(targetPosition, 0.0), 1.0);
         servo.setPosition(targetPosition);
     }
 

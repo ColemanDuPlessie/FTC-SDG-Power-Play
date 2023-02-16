@@ -38,6 +38,7 @@ import org.firstinspires.ftc.teamcode.backend.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.backend.subsystems.CameraSubsystem;
 import org.firstinspires.ftc.teamcode.backend.subsystems.DepositSubsystem;
 import org.firstinspires.ftc.teamcode.backend.subsystems.DrivetrainSubsystem;
+import org.firstinspires.ftc.teamcode.backend.subsystems.IntakeArmSubsystem;
 import org.firstinspires.ftc.teamcode.backend.subsystems.IntakeSlidesSubsystem;
 import org.firstinspires.ftc.teamcode.backend.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.backend.subsystems.SlidesSubsystem;
@@ -51,6 +52,7 @@ public class Robot19397 extends Robot {
     public final ArmSubsystem arm;
     public final SlidesSubsystem slides;
     public final IntakeSubsystem intake;
+    public final IntakeArmSubsystem intakeArm;
     public final IntakeSlidesSubsystem intakeSlides;
     public final DrivetrainSubsystem drivetrain;
     public final CameraSubsystem camera;
@@ -66,6 +68,7 @@ public class Robot19397 extends Robot {
         this.arm = new ArmSubsystem();
         this.slides = new SlidesSubsystem();
         this.intake = new IntakeSubsystem();
+        this.intakeArm = new IntakeArmSubsystem();
         this.intakeSlides = new IntakeSlidesSubsystem();
         this.deposit = new DepositSubsystem();
         this.camera = new CameraSubsystem();
@@ -79,7 +82,7 @@ public class Robot19397 extends Robot {
     public void init(HardwareMap hwMap, boolean isTeleop) {
         // Save reference to Hardware map
         this.hwMap = hwMap;
-        this.drivetrain.init(hwMap, isTeleop);
+        drivetrain.init(hwMap, isTeleop);
         CommandScheduler.getInstance().registerSubsystem(this.drivetrain);
         arm.init(timer, hwMap, isTeleop);
         CommandScheduler.getInstance().registerSubsystem(this.arm);
@@ -87,6 +90,8 @@ public class Robot19397 extends Robot {
         CommandScheduler.getInstance().registerSubsystem(this.slides);
         intake.init(timer, hwMap, isTeleop);
         CommandScheduler.getInstance().registerSubsystem(this.intake);
+        intakeArm.init(timer, hwMap, isTeleop);
+        CommandScheduler.getInstance().registerSubsystem(this.intakeArm);
         intakeSlides.init(timer, hwMap, isTeleop);
         CommandScheduler.getInstance().registerSubsystem(this.intakeSlides);
         deposit.init(timer, hwMap, isTeleop);
