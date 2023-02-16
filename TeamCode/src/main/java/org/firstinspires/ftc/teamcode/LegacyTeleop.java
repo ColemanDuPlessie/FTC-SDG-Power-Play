@@ -66,11 +66,6 @@ public class LegacyTeleop extends CommandbasedOpmode {
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                 .whenReleased(() -> robot.slides.incrementTargetPosition(-0.33));
 
-        gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenReleased(() -> robot.slides.uglyHackUp());
-        gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenReleased(() -> robot.slides.uglyHackDown());
-
         gamepad.getGamepadButton(GamepadKeys.Button.A)
                 .whenReleased(() -> robot.deposit.toggleIntake());
         gamepad.getGamepadButton(GamepadKeys.Button.B)

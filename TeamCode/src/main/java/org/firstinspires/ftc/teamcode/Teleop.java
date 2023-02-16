@@ -67,11 +67,6 @@ public class Teleop extends CommandbasedOpmode {
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                 .whenReleased(() -> robot.slides.incrementTargetPosition(-0.33));
 
-        gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenReleased(() -> robot.slides.uglyHackUp()); // TODO kill this code to death and leave no survivors
-        gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenReleased(() -> robot.slides.uglyHackDown());
-
         // TODO make R. trigger cycle intake arm height (5 setpoints, default to point 1, ping-pong)
 
         gamepad.getGamepadButton(GamepadKeys.Button.A)
