@@ -80,9 +80,11 @@ public class Teleop extends CommandbasedOpmode {
                 .whenReleased(() -> robot.deposit.toggleDeposit());
         gamepad.getGamepadButton(GamepadKeys.Button.X) // TODO write a transfer SequentialCommandGroup to be mapped to X
                 .whenReleased(() -> {robot.slides.setTargetPosition(0.0); robot.arm.setTargetPosition(0.6);});
-        gamepad.getGamepadButton(GamepadKeys.Button.Y) // TODO remap autotarget to right stick button.
-                .whenPressed(new AutoTargetPole(robot.drivetrain, robot.camera, timer, pad1, gamepad.getGamepadButton(GamepadKeys.Button.Y)), true);
+
         // TODO map Y to toggling intake claw
+
+        gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
+                .whenPressed(new AutoTargetPole(robot.drivetrain, robot.camera, timer, pad1, gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)), true);
     }
 
     @Override
