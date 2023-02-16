@@ -19,7 +19,7 @@ public class IntakeSlidesSubsystem extends SubsystemBase implements PositionCont
     private PIDController PIDF;
 
     public static int minPosition = -30;
-    public static int maxPosition = 1100;
+    public static int maxPosition = 1600;
 
     public static double kP = 0.008;
     public static double kI = 0.0000;
@@ -64,6 +64,7 @@ public class IntakeSlidesSubsystem extends SubsystemBase implements PositionCont
 
     public void setTargetPosition(double target) {
         targetPosition = (int)(target * (maxPosition-minPosition) + minPosition);
+        targetPosition = Math.min(Math.max(targetPosition, minPosition), maxPosition);
     }
 
     public void incrementTargetPosition(double increment) {
@@ -74,8 +75,9 @@ public class IntakeSlidesSubsystem extends SubsystemBase implements PositionCont
     @Override
     public void periodic() {
         int currentPosition = motor.getCurrentPosition();
-        double powerMultThrottle = edgePower + (maxPower - edgePower) * Math.min(((double)(Math.min(Math.abs(currentPosition-minPosition), Math.abs(currentPosition-maxPosition))))/edgeDistance, 1.0);
-        motor.setPower(Math.min(powerMultThrottle, Math.max(PIDF.update(motor.getCurrentPosition()-startPosition, targetPosition) * powerMultThrottle, -powerMultThrottle)));
+        double powerMultThrottle = edgePower + (maxPower - edgePower) * Math.min(((double)(Math.abs(currentPosition-targetPosition)))/edgeDistance, 1.0);
+        double actualPower = Math.min(powerMultThrottle, Math.max(PIDF.update(motor.getCurrentPosition()-startPosition, targetPosition) * powerMultThrottle, -powerMultThrottle));
+        motor.setPower(actualPower);
     }
 
 }
