@@ -30,13 +30,9 @@ public class GamepadWrapper {
     public double getRightTrigger() { return g.right_trigger;}
 
     public boolean getLeftStickButton() { return g.left_stick_button;}
-    public double getLeftStickX() { return g.left_stick_button ? 0 : g.left_stick_x;}
-    public double getLeftStickY() { return g.left_stick_button ? 0 : g.left_stick_y;}
-    public double getAltLeftStickX() { return g.left_stick_button ? g.left_stick_x : 0;}
-    public double getAltLeftStickY() { return g.left_stick_button ? g.left_stick_y : 0;}
+    public double getLeftStickX() { return g.left_stick_x;}
+    public double getLeftStickY() { return g.left_stick_y;}
     public boolean getRightStickButton() { return g.right_stick_button;}
-    public double getRightStickX() { return g.right_stick_button ? 0 : g.right_stick_x;}
-    public double getRightStickY() { return g.right_stick_button ? 0 : g.right_stick_y;}
-    public double getAltRightStickX() { return g.right_stick_button ? g.right_stick_x : 0;}
-    public double getAltRightStickY() { return g.right_stick_button ? g.right_stick_y : 0;}
+    public double getRightStickX() { return g.right_stick_x;}
+    public double getRightStickY() { return g.right_stick_y;}
 }
