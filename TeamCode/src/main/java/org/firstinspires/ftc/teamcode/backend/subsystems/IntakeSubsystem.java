@@ -19,20 +19,21 @@ public class IntakeSubsystem extends SubsystemBase implements PositionControlled
 
     public ServoImpl servo;
 
-    public static double downPosition = 0.58;
-    public static double upPosition = 0.2;
+    public static double closedPosition = 0.4; // TODO find setpoint
+    public static double openPosition = 0.3; // TODO find setpoint
+    public static double fullyOpenPosition = 0.2; // TODO find setpoint
 
 
-    private double targetPosition = downPosition;
+    private double targetPosition = closedPosition;
 
     public void init(ElapsedTime aTimer, HardwareMap ahwMap) {
         servo = ahwMap.get(ServoImpl.class, "IntakeServo");
-        raise();
+        close();
     }
 
     public void init(ElapsedTime aTimer, HardwareMap ahwMap, boolean isTeleop) {
         servo = ahwMap.get(ServoImpl.class, "IntakeServo");
-        raise();
+        close();
     }
 
     public double getTargetPosition() {return targetPosition;}
@@ -50,14 +51,15 @@ public class IntakeSubsystem extends SubsystemBase implements PositionControlled
         servo.setPosition(targetPosition);
     }
 
-    public void raise() {setTargetPosition(upPosition);}
-    public void lower() {setTargetPosition(downPosition);}
+    public void close() {setTargetPosition(closedPosition);}
+    public void open() {setTargetPosition(openPosition);}
+    public void fullyOpen() {setTargetPosition(fullyOpenPosition);}
 
     public void toggle() {
-        if (getTargetPosition() == upPosition) {
-            lower();
+        if (getTargetPosition() == openPosition) {
+            close();
         } else {
-            raise();
+            open();
         }
     }
 
