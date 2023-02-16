@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.backend.CommandbasedOpmode;
 import org.firstinspires.ftc.teamcode.backend.commands.AutoTargetPole;
+import org.firstinspires.ftc.teamcode.backend.commands.DepositConeManual;
 import org.firstinspires.ftc.teamcode.backend.commands.DriveFromGamepad;
 
 
@@ -76,8 +77,8 @@ public class Teleop extends CommandbasedOpmode {
 
         gamepad.getGamepadButton(GamepadKeys.Button.A)
                 .whenReleased(() -> robot.deposit.toggleIntake());
-        gamepad.getGamepadButton(GamepadKeys.Button.B) // TODO make deposit into a SequentialCommandGroup that also resets the deposit to resting position
-                .whenReleased(() -> robot.deposit.toggleDeposit());
+        gamepad.getGamepadButton(GamepadKeys.Button.B)
+                .whenReleased(new DepositConeManual(robot.slides, robot.arm, robot.deposit, timer));
         gamepad.getGamepadButton(GamepadKeys.Button.X) // TODO write a transfer SequentialCommandGroup to be mapped to X
                 .whenReleased(() -> {robot.slides.setTargetPosition(0.0); robot.arm.setTargetPosition(0.6);});
 

@@ -33,11 +33,10 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.backend.CommandbasedOpmode;
-import org.firstinspires.ftc.teamcode.backend.commands.DepositCone;
+import org.firstinspires.ftc.teamcode.backend.commands.DepositConeAuto;
 import org.firstinspires.ftc.teamcode.backend.commands.FollowRRTraj;
 import org.firstinspires.ftc.teamcode.backend.cv.TeamShippingElementDetector;
 import org.firstinspires.ftc.teamcode.backend.roadrunner.drive.SampleMecanumDrive;
@@ -160,7 +159,7 @@ public class Auto extends CommandbasedOpmode {
             park = new FollowRRTraj(robot.drivetrain, drive, C);
         }
         scheduler.schedule(false, new SequentialCommandGroup(forward,
-                new DepositCone(robot.slides, robot.arm, robot.deposit, 0.2, timer),
+                new DepositConeAuto(robot.slides, robot.arm, robot.deposit, 0.2, timer),
                 park
         ));
     }

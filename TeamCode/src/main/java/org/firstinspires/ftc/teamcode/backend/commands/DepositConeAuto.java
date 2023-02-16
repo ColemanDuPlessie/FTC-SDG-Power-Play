@@ -10,9 +10,9 @@ import org.firstinspires.ftc.teamcode.backend.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.backend.subsystems.DepositSubsystem;
 import org.firstinspires.ftc.teamcode.backend.subsystems.SlidesSubsystem;
 
-public class DepositCone extends SequentialCommandGroup {
+public class DepositConeAuto extends SequentialCommandGroup {
 
-    public DepositCone(SlidesSubsystem s, ArmSubsystem a, DepositSubsystem d, double targetHeight, ElapsedTime timer) {
+    public DepositConeAuto(SlidesSubsystem s, ArmSubsystem a, DepositSubsystem d, double targetHeight, ElapsedTime timer) {
         addCommands(new InstantCommand(() -> prepare(a, d, targetHeight)),
                 new SmoothSetSlides(s, targetHeight, (long)(targetHeight*5000), timer),
                 new InstantCommand(() -> a.setTargetPosition(0.7)),
@@ -22,8 +22,7 @@ public class DepositCone extends SequentialCommandGroup {
                 new InstantCommand(() -> a.setTargetPosition(0.2)),
                 new InstantCommand(() -> d.hold()),
                 new WaitUntilCommand(() -> a.getPosition() < 0.5),
-                new InstantCommand(() -> s.setTargetPosition(0.0)),
-                new WaitUntilCommand(() -> s.getPosition() < 0.2),
+                new SmoothSetSlides(s, 0.0, 5000, timer), // TODO: speed up?
                 new InstantCommand(() -> a.setTargetPosition(0.0)));
         addRequirements(s);
         addRequirements(a);
