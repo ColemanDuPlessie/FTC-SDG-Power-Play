@@ -57,10 +57,15 @@ public class Teleop extends CommandbasedOpmode {
 
         GamepadEx gamepad = new GamepadEx(gamepad1);
 
-        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT) // TODO remap arm to R/L bumpers
+        gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenReleased(() -> robot.arm.incrementTargetPosition(-0.2)); // TODO closely inspect setpoints
-        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT) // TODO map horiz. slides to DPAD
+        gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenReleased(() -> robot.arm.incrementTargetPosition(0.2));
+
+        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+                .whenReleased(() -> robot.intakeSlides.incrementTargetPosition(-0.2)); // TODO closely inspect setpoints
+        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+                .whenReleased(() -> robot.intakeSlides.incrementTargetPosition(0.2));
 
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                 .whenReleased(() -> robot.slides.incrementTargetPosition(0.33)); // TODO closely inspect setpoints
