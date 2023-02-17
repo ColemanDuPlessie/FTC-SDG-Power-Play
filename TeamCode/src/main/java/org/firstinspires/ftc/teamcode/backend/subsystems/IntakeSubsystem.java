@@ -19,9 +19,9 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public ServoImpl servo;
 
-    public static double closedPosition = 0.4; // TODO find setpoint
-    public static double openPosition = 0.3; // TODO find setpoint
-    public static double fullyOpenPosition = 0.2; // TODO find setpoint
+    public static double closedPosition = 0.1; // TODO find better setpoint
+    public static double openPosition = 0.15; // TODO find better setpoint
+    public static double fullyOpenPosition = 0.2; // TODO find better setpoint
 
 
     private double targetPosition = closedPosition;
