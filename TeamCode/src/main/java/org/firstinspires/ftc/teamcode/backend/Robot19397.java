@@ -51,9 +51,9 @@ public class Robot19397 extends Robot {
     public final DepositSubsystem deposit;
     public final ArmSubsystem arm;
     public final SlidesSubsystem slides;
-    public final IntakeSubsystem intake;
+/*    public final IntakeSubsystem intake;
     public final IntakeArmSubsystem intakeArm;
-    public final IntakeSlidesSubsystem intakeSlides;
+    public final IntakeSlidesSubsystem intakeSlides;*/
     public final DrivetrainSubsystem drivetrain;
     public final CameraSubsystem camera;
 
@@ -67,9 +67,9 @@ public class Robot19397 extends Robot {
         this.drivetrain = new DrivetrainSubsystem();
         this.arm = new ArmSubsystem();
         this.slides = new SlidesSubsystem();
-        this.intake = new IntakeSubsystem();
+/*        this.intake = new IntakeSubsystem();
         this.intakeArm = new IntakeArmSubsystem();
-        this.intakeSlides = new IntakeSlidesSubsystem();
+        this.intakeSlides = new IntakeSlidesSubsystem();*/
         this.deposit = new DepositSubsystem();
         this.camera = new CameraSubsystem();
     }
@@ -88,12 +88,12 @@ public class Robot19397 extends Robot {
         CommandScheduler.getInstance().registerSubsystem(this.arm);
         slides.init(timer, hwMap, isTeleop);
         CommandScheduler.getInstance().registerSubsystem(this.slides);
-        intake.init(timer, hwMap, isTeleop);
+/*        intake.init(timer, hwMap, isTeleop);
         CommandScheduler.getInstance().registerSubsystem(this.intake);
         intakeArm.init(timer, hwMap, isTeleop);
         CommandScheduler.getInstance().registerSubsystem(this.intakeArm);
         intakeSlides.init(timer, hwMap, isTeleop);
-        CommandScheduler.getInstance().registerSubsystem(this.intakeSlides);
+        CommandScheduler.getInstance().registerSubsystem(this.intakeSlides);*/
         deposit.init(timer, hwMap, isTeleop);
         CommandScheduler.getInstance().registerSubsystem(this.deposit);
         if (isTeleop) { // TODO

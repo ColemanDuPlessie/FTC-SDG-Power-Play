@@ -61,18 +61,18 @@ public class Teleop extends CommandbasedOpmode {
 
         GamepadEx gamepad = new GamepadEx(gamepad1);
 
-        new Trigger(() -> gamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) >= 0.5)
-                .whenInactive(() -> robot.intakeArm.pingpong());
+/*        new Trigger(() -> gamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) >= 0.5)
+                .whenInactive(() -> robot.intakeArm.pingpong());*/
 
         gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenReleased(() -> robot.arm.incrementTargetPosition(-0.2)); // TODO closely inspect setpoints
         gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenReleased(() -> robot.arm.incrementTargetPosition(0.2));
 
-        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+/*        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
                 .whenReleased(() -> robot.intakeSlides.incrementTargetPosition(-0.2)); // TODO closely inspect setpoints
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whenReleased(() -> {robot.intakeSlides.incrementTargetPosition(0.2); robot.intakeArm.extend();});
+                .whenReleased(() -> {robot.intakeSlides.incrementTargetPosition(0.2); robot.intakeArm.extend();});*/
 
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                 .whenReleased(() -> robot.slides.incrementTargetPosition(0.33)); // TODO closely inspect setpoints
@@ -83,10 +83,10 @@ public class Teleop extends CommandbasedOpmode {
                 .whenReleased(() -> robot.deposit.toggleIntake());
         gamepad.getGamepadButton(GamepadKeys.Button.B)
                 .whenReleased(new DepositConeManual(robot.slides, robot.arm, robot.deposit, timer));
-        gamepad.getGamepadButton(GamepadKeys.Button.X)
+/*        gamepad.getGamepadButton(GamepadKeys.Button.X)
                 .whenReleased(new ContextSensitiveRetract(robot.intakeSlides, robot.intakeArm, robot.intake, robot.slides, robot.arm, robot.deposit, timer));
         gamepad.getGamepadButton(GamepadKeys.Button.Y)
-                .whenReleased(() -> robot.intake.toggle());
+                .whenReleased(() -> robot.intake.toggle());*/
 
         gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
                 .whenPressed(new AutoTargetPole(robot.drivetrain, robot.camera, timer, pad1, gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)), true);
