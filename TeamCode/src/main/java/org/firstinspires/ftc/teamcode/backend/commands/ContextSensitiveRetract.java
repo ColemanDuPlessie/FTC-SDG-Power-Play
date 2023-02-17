@@ -21,8 +21,8 @@ public class ContextSensitiveRetract extends SequentialCommandGroup {
             addCommands(new InstantCommand(() -> {i.close(); a2.setTargetPosition(0.6); d.deposit();}),
                     new WaitCommand(250),
                     new InstantCommand(() -> {a.hide(); d.hold();}),
-                    new ParallelCommandGroup(new SmoothSetIntakeSlides(s, 0.0, 5000, timer),
-                            new SmoothSetSlides(s2, 0.0, 5000, timer)),// TODO: speed up?
+                    new ParallelCommandGroup(new SmoothSetIntakeSlides(s, 0.0, (int)(s.getPosition()*4000), timer),
+                            new SmoothSetSlides(s2, 0.0, (int)(s2.getPosition()*4000), timer)),// TODO: speed up?
                     new InstantCommand(() -> a.retract()),
                     new WaitCommand(500),
                     new InstantCommand(() -> i.fullyOpen()),
@@ -36,7 +36,7 @@ public class ContextSensitiveRetract extends SequentialCommandGroup {
         } else {
             addCommands(new InstantCommand(() -> i.open()),
                     new InstantCommand(() -> a.hide()),
-                    new SmoothSetIntakeSlides(s, 0.0, 5000, timer)); // TODO: speed up?
+                    new SmoothSetIntakeSlides(s, 0.0, (int)(s.getPosition()*4000), timer)); // TODO: speed up?
         }
         addRequirements(s, a, i);
     }

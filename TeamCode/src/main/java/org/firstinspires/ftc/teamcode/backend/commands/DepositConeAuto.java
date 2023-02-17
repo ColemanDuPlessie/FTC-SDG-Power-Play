@@ -22,7 +22,7 @@ public class DepositConeAuto extends SequentialCommandGroup {
                 new InstantCommand(() -> a.setTargetPosition(0.2)),
                 new InstantCommand(() -> d.hold()),
                 new WaitUntilCommand(() -> a.getPosition() < 0.5),
-                new SmoothSetSlides(s, 0.0, 5000, timer), // TODO: speed up?
+                new SmoothSetSlides(s, 0.0, (long)(targetHeight*5000), timer), // TODO: speed up?
                 new InstantCommand(() -> a.setTargetPosition(0.0)));
         addRequirements(s);
         addRequirements(a);

@@ -44,7 +44,7 @@ public class AutoTargetPole extends CommandBase {
 
     private PoleDetection targetPole = new PoleDetection(Integer.MAX_VALUE, Integer.MAX_VALUE);
 
-    private final PoleDetection target = new PoleDetection(0, 125);
+    private final PoleDetection target = new PoleDetection(12, 125);
 
     /**
      * IMPORTANT: localizer should already be initialized and connected to the camera.

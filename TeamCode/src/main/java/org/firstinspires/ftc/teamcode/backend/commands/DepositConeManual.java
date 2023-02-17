@@ -14,11 +14,11 @@ public class DepositConeManual extends SequentialCommandGroup {
 
     public DepositConeManual(SlidesSubsystem s, ArmSubsystem a, DepositSubsystem d, ElapsedTime timer) {
         addCommands(new InstantCommand(() -> d.deposit()),
-                new WaitCommand(1000),
+                new WaitCommand(500),
                 new InstantCommand(() -> a.setTargetPosition(0.4)),
                 new InstantCommand(() -> d.hold()),
                 new WaitUntilCommand(() -> a.getPosition() < 0.5),
-                new SmoothSetSlides(s, 0.0, 5000, timer)); // TODO: speed up?
+                new SmoothSetSlides(s, 0.0, (int)(s.getPosition()*4000), timer)); // TODO: speed up?
         addRequirements(s);
         addRequirements(a);
         addRequirements(d);
