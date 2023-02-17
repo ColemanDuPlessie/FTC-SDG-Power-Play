@@ -38,6 +38,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.backend.CommandbasedOpmode;
 import org.firstinspires.ftc.teamcode.backend.commands.AutoTargetPole;
+import org.firstinspires.ftc.teamcode.backend.commands.ContextSensitiveRetract;
 import org.firstinspires.ftc.teamcode.backend.commands.DepositConeManual;
 import org.firstinspires.ftc.teamcode.backend.commands.DriveFromGamepad;
 
@@ -78,14 +79,12 @@ public class Teleop extends CommandbasedOpmode {
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                 .whenReleased(() -> robot.slides.incrementTargetPosition(-0.33));
 
-        // TODO make R. trigger cycle intake arm height (5 setpoints, default to point 1, ping-pong)
-
         gamepad.getGamepadButton(GamepadKeys.Button.A)
                 .whenReleased(() -> robot.deposit.toggleIntake());
         gamepad.getGamepadButton(GamepadKeys.Button.B)
                 .whenReleased(new DepositConeManual(robot.slides, robot.arm, robot.deposit, timer));
-        gamepad.getGamepadButton(GamepadKeys.Button.X) // TODO write a transfer SequentialCommandGroup to be mapped to X
-                .whenReleased(() -> {robot.slides.setTargetPosition(0.0); robot.arm.setTargetPosition(0.6);});
+        gamepad.getGamepadButton(GamepadKeys.Button.X)
+                .whenReleased(new ContextSensitiveRetract(robot.intakeSlides, robot.intakeArm, robot.intake, robot.slides, robot.arm, robot.deposit, timer));
         gamepad.getGamepadButton(GamepadKeys.Button.Y)
                 .whenReleased(() -> robot.intake.toggle());
 
