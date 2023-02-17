@@ -30,8 +30,10 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.backend.CommandbasedOpmode;
@@ -58,6 +60,9 @@ public class Teleop extends CommandbasedOpmode {
 
         GamepadEx gamepad = new GamepadEx(gamepad1);
 
+        new Trigger(() -> gamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) >= 0.5)
+                .whenInactive(() -> robot.intakeArm.pingpong());
+
         gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenReleased(() -> robot.arm.incrementTargetPosition(-0.2)); // TODO closely inspect setpoints
         gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
@@ -66,7 +71,7 @@ public class Teleop extends CommandbasedOpmode {
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
                 .whenReleased(() -> robot.intakeSlides.incrementTargetPosition(-0.2)); // TODO closely inspect setpoints
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whenReleased(() -> robot.intakeSlides.incrementTargetPosition(0.2));
+                .whenReleased(() -> {robot.intakeSlides.incrementTargetPosition(0.2); robot.intakeArm.extend();});
 
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                 .whenReleased(() -> robot.slides.incrementTargetPosition(0.33)); // TODO closely inspect setpoints
