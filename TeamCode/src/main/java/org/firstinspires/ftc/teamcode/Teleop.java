@@ -64,6 +64,11 @@ public class Teleop extends CommandbasedOpmode {
 /*        new Trigger(() -> gamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) >= 0.5)
                 .whenInactive(() -> robot.intakeArm.pingpong());*/
 
+        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT) // TODO phase out this whole block of code
+                .whenReleased(() -> robot.arm.incrementTargetPosition(-0.2)); // TODO closely inspect setpoints
+        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+                .whenReleased(() -> robot.arm.incrementTargetPosition(0.2));
+
         gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenReleased(() -> robot.arm.incrementTargetPosition(-0.2)); // TODO closely inspect setpoints
         gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
@@ -75,9 +80,9 @@ public class Teleop extends CommandbasedOpmode {
                 .whenReleased(() -> {robot.intakeSlides.incrementTargetPosition(0.2); robot.intakeArm.extend();});*/
 
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-                .whenReleased(() -> robot.slides.incrementTargetPosition(0.33)); // TODO closely inspect setpoints
+                .whenReleased(() -> robot.slides.incrementTargetPosition(0.3)); // TODO closely inspect setpoints
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
-                .whenReleased(() -> robot.slides.incrementTargetPosition(-0.33));
+                .whenReleased(() -> robot.slides.incrementTargetPosition(-0.3));
 
         gamepad.getGamepadButton(GamepadKeys.Button.A)
                 .whenReleased(() -> robot.deposit.toggleIntake());
