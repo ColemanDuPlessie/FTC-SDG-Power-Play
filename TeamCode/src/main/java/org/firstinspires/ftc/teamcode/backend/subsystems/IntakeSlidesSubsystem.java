@@ -19,7 +19,7 @@ public class IntakeSlidesSubsystem extends SubsystemBase implements PositionCont
     private PIDController PIDF;
 
     public static int minPosition = -30;
-    public static int maxPosition = 1600;
+    public static int maxPosition = 1300;
 
     public static double kP = 0.008;
     public static double kI = 0.0000;
@@ -34,7 +34,7 @@ public class IntakeSlidesSubsystem extends SubsystemBase implements PositionCont
 
     public void init(ElapsedTime aTimer, HardwareMap ahwMap) {
         motor = ahwMap.get(DcMotor.class, "IntakeSlidesMotor");
-        motor.setDirection(DcMotorSimple.Direction.FORWARD);
+        motor.setDirection(DcMotorSimple.Direction.REVERSE);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         startPosition = motor.getCurrentPosition();
         targetPosition = 0;
@@ -43,7 +43,7 @@ public class IntakeSlidesSubsystem extends SubsystemBase implements PositionCont
 
     public void init(ElapsedTime aTimer, HardwareMap ahwMap, boolean isTeleop) {
         motor = ahwMap.get(DcMotor.class, "IntakeSlidesMotor");
-        motor.setDirection(DcMotorSimple.Direction.FORWARD);
+        motor.setDirection(DcMotorSimple.Direction.REVERSE);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         if (isTeleop) {
             Integer position = AutoToTeleopContainer.getInstance().getIntakeSlidesPosition();
