@@ -21,9 +21,9 @@ public class IntakeSlidesSubsystem extends SubsystemBase implements PositionCont
     public static int minPosition = -30;
     public static int maxPosition = 1300;
 
-    public static double kP = 0.008;
+    public static double kP = 0.004;
     public static double kI = 0.0000;
-    public static double kD = 0.0001;
+    public static double kD = 0.00005;
     public static double maxPower = 1;
     public static double edgePower = 0.35;
     public static int edgeDistance = 400;
@@ -68,7 +68,7 @@ public class IntakeSlidesSubsystem extends SubsystemBase implements PositionCont
     }
 
     public void incrementTargetPosition(double increment) {
-        targetPosition += (int)(increment * (maxPosition-minPosition) + minPosition);
+        targetPosition += (int)(increment * (maxPosition-minPosition));
         targetPosition = Math.min(Math.max(targetPosition, minPosition), maxPosition);
     }
 

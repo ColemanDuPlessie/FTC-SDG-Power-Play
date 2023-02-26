@@ -18,9 +18,8 @@ public class IntakeArmSubsystem extends SubsystemBase implements PositionControl
 
     public ServoImpl servo;
 
-    public static double minPosition = 0.89;
-    public static double maxPosition = 0.32;
-    public static double posIncrement = 0.02;
+    public static double minPosition = 0.67;
+    public static double maxPosition = 0.2;
     public static double pingpongPositions[] = {0.00, 0.06, 0.10, 0.14, 0.18};
 
     double targetPosition = 0.0;
@@ -30,7 +29,7 @@ public class IntakeArmSubsystem extends SubsystemBase implements PositionControl
 
     public void init(ElapsedTime aTimer, HardwareMap ahwMap) {
         servo = ahwMap.get(ServoImpl.class, "IntakeArmServo");
-        servo.setPosition(minPosition);
+        setTargetPosition(0.3);
     }
 
     public void init(ElapsedTime aTimer, HardwareMap ahwMap, boolean isTeleop) {
@@ -47,13 +46,6 @@ public class IntakeArmSubsystem extends SubsystemBase implements PositionControl
         internalSetPosition(target);
     }
 
-    private void setRawTargetPosition(double target) {
-        pingpongPosition = target == maxPosition ? 1 : -1;
-        pingpongReversed = false;
-        targetPosition = (target-minPosition)/(maxPosition-minPosition);
-        servo.setPosition(target);
-    }
-
     private void internalSetPosition(double target) {
         targetPosition = target;
         servo.setPosition(target * (maxPosition-minPosition) + minPosition);
@@ -61,7 +53,7 @@ public class IntakeArmSubsystem extends SubsystemBase implements PositionControl
 
     public void extend() {setTargetPosition(1.0);}
     public void retract() {setTargetPosition(0.0);}
-    public void hide() {setRawTargetPosition(0.72);}
+    public void hide() {setTargetPosition(0.3);}
 
     public void incrementTargetPosition(double increment) {
         targetPosition += increment;
@@ -73,13 +65,13 @@ public class IntakeArmSubsystem extends SubsystemBase implements PositionControl
         if (pingpongPosition == -1) {extend();} // not yet in a position to pingpong
         else if (pingpongReversed) {
             pingpongPosition--;
-            internalSetPosition(1.0 - pingpongPositions[pingpongPosition-1]/(maxPosition-minPosition));
+            internalSetPosition(1.0 + pingpongPositions[pingpongPosition-1]/(maxPosition-minPosition));
             if (pingpongPosition == 1) {
                 pingpongReversed = false;
             }
         } else {
             pingpongPosition++;
-            internalSetPosition(1.0 - pingpongPositions[pingpongPosition-1]/(maxPosition-minPosition));
+            internalSetPosition(1.0 + pingpongPositions[pingpongPosition-1]/(maxPosition-minPosition));
             if (pingpongPosition == 5) {
                 pingpongReversed = true;
             }

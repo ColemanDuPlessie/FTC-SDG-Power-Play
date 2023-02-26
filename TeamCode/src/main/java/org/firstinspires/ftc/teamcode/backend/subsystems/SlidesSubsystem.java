@@ -78,7 +78,7 @@ public class SlidesSubsystem extends SubsystemBase implements PositionControlled
     }
 
     public void incrementTargetPosition(double increment) {
-        targetPosition += (int)(increment * (maxPosition-minPosition) + minPosition);
+        targetPosition += (int)(increment * (maxPosition-minPosition));
         targetPosition = Math.min(Math.max(targetPosition, minPosition), maxPosition);
     }
 
