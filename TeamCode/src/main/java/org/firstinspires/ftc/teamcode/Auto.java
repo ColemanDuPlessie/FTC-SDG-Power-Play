@@ -63,7 +63,7 @@ public class Auto extends CommandbasedOpmode {
     public double STARTX = 36;
     public double STARTY = 63;
     public double STARTTHETA = 90;
-    public double DEPOSITY = 48;
+    public double DEPOSITY = 0;
     public double DEPOSITTHETA = STARTTHETA - 90;
     public double MIDX = 36;
     public double MIDY = 36;
@@ -159,7 +159,7 @@ public class Auto extends CommandbasedOpmode {
             park = new FollowRRTraj(robot.drivetrain, drive, C);
         }
         scheduler.schedule(false, new SequentialCommandGroup(forward,
-                new DepositConeAuto(robot.slides, robot.arm, robot.deposit, 0.2, timer),
+                new DepositConeAuto(robot.slides, robot.arm, robot.deposit, 0.8, timer),
                 park
         ));
     }
