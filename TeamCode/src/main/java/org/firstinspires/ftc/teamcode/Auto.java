@@ -32,7 +32,10 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.arcrobotics.ftclib.command.Command;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.backend.CommandbasedOpmode;
@@ -57,19 +60,23 @@ public class Auto extends CommandbasedOpmode {
     TrajectorySequence L;
     TrajectorySequence C;
     TrajectorySequence R;
+    TrajectorySequence prepPark;
     TeamShippingElementDetector tagDetector;
     TeamShippingElementDetector.POSITIONS tagPosition = null;
 
     public double STARTX = 36;
     public double STARTY = 63;
     public double STARTTHETA = 90;
-    public double DEPOSITY = 0;
-    public double DEPOSITTHETA = STARTTHETA - 90;
+    public double DEPOSITX = 32;
+    public double DEPOSITY = 10;
+    public double DEPOSITTHETA = STARTTHETA - 45;
     public double MIDX = 36;
-    public double MIDY = 36;
+    public double MIDY = 12;
     public double DRIFTX = -24;
 
     private int tagDetectionFails = 0;
+
+    private Command depositConeCommand;
 
     double startHeading;
 
@@ -77,7 +84,7 @@ public class Auto extends CommandbasedOpmode {
     public void init() {
         robot.init(hardwareMap, false);
 
-        if (SetDrivingStyle.startOnRight) {DEPOSITTHETA += 180;}
+        if (SetDrivingStyle.startOnRight) {DEPOSITTHETA += 90; DEPOSITX += 2*(MIDX-DEPOSITX);}
 
         startHeading = robot.drivetrain.getHeading();
 
@@ -88,24 +95,32 @@ public class Auto extends CommandbasedOpmode {
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(startPose);
 
-        Pose2d depositPose = new Pose2d(MIDX, DEPOSITY, Math.toRadians(DEPOSITTHETA));
+        Pose2d depositPose = new Pose2d(DEPOSITX, DEPOSITY, Math.toRadians(DEPOSITTHETA));
+
+        Pose2d prepParkPose = new Pose2d(MIDX, MIDY, Math.toRadians(STARTTHETA));
+
+        prepPark = drive.trajectorySequenceBuilder(depositPose)
+                .lineToLinearHeading(new Pose2d(MIDX, MIDY, Math.toRadians(STARTTHETA)))
+                .build();
+
+        depositConeCommand = new DepositConeAuto(robot.slides, robot.arm, robot.deposit, 0.95, timer, new FollowRRTraj(robot.drivetrain, drive, prepPark));
 
         deposit = drive.trajectorySequenceBuilder(startPose)
                 .setReversed(true)
-                .splineToSplineHeading(new Pose2d(MIDX, DEPOSITY, Math.toRadians(DEPOSITTHETA)), Math.toRadians(STARTTHETA+180))
+                .splineToSplineHeading(new Pose2d(MIDX, MIDY+12, Math.toRadians(STARTTHETA)), Math.toRadians(STARTTHETA+180))
+                .addDisplacementMarker(() -> scheduler.schedule(depositConeCommand))
+                .splineToSplineHeading(new Pose2d(DEPOSITX, DEPOSITY, Math.toRadians(DEPOSITTHETA)), Math.toRadians(DEPOSITTHETA+180))
                 .build();
 
-        L = drive.trajectorySequenceBuilder(depositPose)
-                .lineToLinearHeading(new Pose2d(MIDX, MIDY, Math.toRadians(STARTTHETA)))
+        L = drive.trajectorySequenceBuilder(prepParkPose)
                 .lineTo(new Vector2d(MIDX-DRIFTX, MIDY))
                 .build();
 
-        C = drive.trajectorySequenceBuilder(depositPose)
-                .lineToLinearHeading(new Pose2d(MIDX, MIDY, Math.toRadians(STARTTHETA)))
+        C = drive.trajectorySequenceBuilder(prepParkPose)
+                .lineTo(new Vector2d(MIDX, MIDY))
                 .build();
 
-        R = drive.trajectorySequenceBuilder(depositPose)
-                .lineToLinearHeading(new Pose2d(MIDX, MIDY, Math.toRadians(STARTTHETA)))
+        R = drive.trajectorySequenceBuilder(prepParkPose)
                 .lineTo(new Vector2d(MIDX+DRIFTX, MIDY))
                 .build();
 
@@ -159,8 +174,9 @@ public class Auto extends CommandbasedOpmode {
             park = new FollowRRTraj(robot.drivetrain, drive, C);
         }
         scheduler.schedule(false, new SequentialCommandGroup(forward,
-                new DepositConeAuto(robot.slides, robot.arm, robot.deposit, 0.8, timer),
-                park
+                new WaitUntilCommand(() -> !scheduler.isScheduled(depositConeCommand)),
+                park,
+                new InstantCommand(() -> robot.arm.setTargetPosition(0.0))
         ));
     }
 
