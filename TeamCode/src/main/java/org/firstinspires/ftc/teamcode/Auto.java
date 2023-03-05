@@ -34,6 +34,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.ScheduleCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -41,6 +42,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.backend.CommandbasedOpmode;
 import org.firstinspires.ftc.teamcode.backend.commands.DepositConeAuto;
 import org.firstinspires.ftc.teamcode.backend.commands.FollowRRTraj;
+import org.firstinspires.ftc.teamcode.backend.commands.IntakeConeAuto;
 import org.firstinspires.ftc.teamcode.backend.cv.TeamShippingElementDetector;
 import org.firstinspires.ftc.teamcode.backend.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.backend.roadrunner.trajectorysequence.TrajectorySequence;
@@ -57,8 +59,10 @@ public class Auto extends CommandbasedOpmode {
 
     SampleMecanumDrive drive;
     TrajectorySequence deposit;
+    TrajectorySequence intake;
+    TrajectorySequence subsequentDeposit;
     TrajectorySequence L;
-    TrajectorySequence C;
+//    TrajectorySequence C;
     TrajectorySequence R;
     TrajectorySequence prepPark;
     TeamShippingElementDetector tagDetector;
@@ -67,16 +71,23 @@ public class Auto extends CommandbasedOpmode {
     public double STARTX = 36;
     public double STARTY = 63;
     public double STARTTHETA = 90;
-    public double DEPOSITX = 32;
+    public double DEPOSITX = 34;
     public double DEPOSITY = 10;
     public double DEPOSITTHETA = STARTTHETA - 45;
+    public double INTAKEX = 55;
+    public double INTAKEY = 12;
+    public double INTAKETHETA = STARTTHETA + 90;
     public double MIDX = 36;
     public double MIDY = 12;
     public double DRIFTX = -24;
+    public double INTAKEFUDGEFACTOR = -1;
 
     private int tagDetectionFails = 0;
 
     private Command depositConeCommand;
+    private Command subsequentDepositConeCommand;
+    private Command prepParkCommand;
+    private Command intakeConeCommand;
 
     double startHeading;
 
@@ -84,7 +95,13 @@ public class Auto extends CommandbasedOpmode {
     public void init() {
         robot.init(hardwareMap, false);
 
-        if (SetDrivingStyle.startOnRight) {DEPOSITTHETA += 90; DEPOSITX += 2*(MIDX-DEPOSITX);}
+        if (SetDrivingStyle.startOnRight) {
+            DEPOSITTHETA += 90;
+            DEPOSITX += 2*(MIDX-DEPOSITX);
+            INTAKETHETA += 180;
+            INTAKEX += 2*(MIDX-INTAKEX);
+            INTAKEFUDGEFACTOR *= -1;
+        }
 
         startHeading = robot.drivetrain.getHeading();
 
@@ -95,30 +112,51 @@ public class Auto extends CommandbasedOpmode {
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(startPose);
 
+        Pose2d intakePose = new Pose2d(INTAKEX, INTAKEY, Math.toRadians(INTAKETHETA));
+
         Pose2d depositPose = new Pose2d(DEPOSITX, DEPOSITY, Math.toRadians(DEPOSITTHETA));
 
         Pose2d prepParkPose = new Pose2d(MIDX, MIDY, Math.toRadians(STARTTHETA));
 
         prepPark = drive.trajectorySequenceBuilder(depositPose)
-                .lineToLinearHeading(new Pose2d(MIDX, MIDY, Math.toRadians(STARTTHETA)))
+                .lineToLinearHeading(prepParkPose)
                 .build();
 
-        depositConeCommand = new DepositConeAuto(robot.slides, robot.arm, robot.deposit, 0.95, timer, new FollowRRTraj(robot.drivetrain, drive, prepPark));
+        prepParkCommand = new FollowRRTraj(robot.drivetrain, drive, prepPark);
+
+        intakeConeCommand = new IntakeConeAuto(robot.arm, robot.deposit, 5, timer);
+        depositConeCommand = new DepositConeAuto(robot.slides, robot.arm, robot.deposit, 0.95, timer);
+        subsequentDepositConeCommand = new DepositConeAuto(robot.slides, robot.arm, robot.deposit, 0.95, timer);
+
+        intake = drive.trajectorySequenceBuilder(prepParkPose)
+                .setReversed(true)
+                .splineToLinearHeading(new Pose2d((INTAKEX+MIDX*2)/3, INTAKEY+2, Math.toRadians(INTAKETHETA)), Math.toRadians(INTAKETHETA+180))
+                .lineToLinearHeading(intakePose)
+                .build();
 
         deposit = drive.trajectorySequenceBuilder(startPose)
                 .setReversed(true)
                 .splineToSplineHeading(new Pose2d(MIDX, MIDY+12, Math.toRadians(STARTTHETA)), Math.toRadians(STARTTHETA+180))
                 .addDisplacementMarker(() -> scheduler.schedule(depositConeCommand))
-                .splineToSplineHeading(new Pose2d(DEPOSITX, DEPOSITY, Math.toRadians(DEPOSITTHETA)), Math.toRadians(DEPOSITTHETA+180))
+                .splineToSplineHeading(depositPose.plus(new Pose2d(0, -3, 0)), Math.toRadians(DEPOSITTHETA+180))
+                .lineToLinearHeading(depositPose)
+                .build();
+
+        subsequentDeposit = drive.trajectorySequenceBuilder(intakePose.plus(new Pose2d(INTAKEFUDGEFACTOR, 0, 0)))
+                .addDisplacementMarker(() -> drive.setPoseEstimate(drive.getPoseEstimate().plus(new Pose2d(INTAKEFUDGEFACTOR, 0, 0))))
+                .setReversed(true)
+                .splineToSplineHeading(new Pose2d((MIDX+2*INTAKEX)/3, MIDY, Math.toRadians(STARTTHETA)), Math.toRadians(INTAKETHETA))
+                .addDisplacementMarker(() -> scheduler.schedule(subsequentDepositConeCommand))
+                .splineToSplineHeading(depositPose, Math.toRadians(DEPOSITTHETA+180))
                 .build();
 
         L = drive.trajectorySequenceBuilder(prepParkPose)
                 .lineTo(new Vector2d(MIDX-DRIFTX, MIDY))
                 .build();
 
-        C = drive.trajectorySequenceBuilder(prepParkPose)
-                .lineTo(new Vector2d(MIDX, MIDY))
-                .build();
+//        C = drive.trajectorySequenceBuilder(prepParkPose)
+//                .lineTo(new Vector2d(MIDX, MIDY))
+//                .build();
 
         R = drive.trajectorySequenceBuilder(prepParkPose)
                 .lineTo(new Vector2d(MIDX+DRIFTX, MIDY))
@@ -165,16 +203,23 @@ public class Auto extends CommandbasedOpmode {
             telemetry.addLine("Camera was not initialized. CV pipeline replaced by default behavior.");
         }
         FollowRRTraj forward = new FollowRRTraj(robot.drivetrain, drive, deposit);
-        FollowRRTraj park;
+        Command park;
         if (tagPosition == TeamShippingElementDetector.POSITIONS.ONE) {
             park = new FollowRRTraj(robot.drivetrain, drive, L);
         } else if (tagPosition == TeamShippingElementDetector.POSITIONS.THREE) {
             park = new FollowRRTraj(robot.drivetrain, drive, R);
         } else {
-            park = new FollowRRTraj(robot.drivetrain, drive, C);
+            park = new InstantCommand(() -> {});
+//            park = new FollowRRTraj(robot.drivetrain, drive, C);
         }
         scheduler.schedule(false, new SequentialCommandGroup(forward,
                 new WaitUntilCommand(() -> !scheduler.isScheduled(depositConeCommand)),
+                new FollowRRTraj(robot.drivetrain, drive, intake),
+                new ScheduleCommand(intakeConeCommand),
+                new WaitUntilCommand(() -> !scheduler.isScheduled(intakeConeCommand)),
+                new FollowRRTraj(robot.drivetrain, drive, subsequentDeposit),
+                new WaitUntilCommand(() -> !scheduler.isScheduled(subsequentDepositConeCommand)),
+                prepParkCommand,
                 park,
                 new InstantCommand(() -> robot.arm.setTargetPosition(0.0))
         ));
@@ -183,8 +228,20 @@ public class Auto extends CommandbasedOpmode {
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
+
+    boolean s = false;
+    boolean a = false;
+    boolean d = false;
+
     @Override
     public void loop() {
+        s = scheduler.requiring(robot.slides) != null;
+        a = scheduler.requiring(robot.arm) != null;
+        d = scheduler.requiring(robot.deposit) != null;
+        telemetry.addData("Deposit", d);
+        telemetry.addData("Slides", s);
+        telemetry.addData("Arm", a);
+        telemetry.addData("Drivetrain", scheduler.requiring(robot.drivetrain));
     }
 
     /*
