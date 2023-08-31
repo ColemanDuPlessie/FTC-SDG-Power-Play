@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.backend.CommandbasedOpmode;
+import org.firstinspires.ftc.teamcode.backend.commands.DriveFromGamepad;
 import org.firstinspires.ftc.teamcode.backend.utilities.OverrideGamepadWrapper;
 
 
@@ -50,41 +51,11 @@ public class DemoTeleop extends CommandbasedOpmode {
 
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
-    @Override
-    public void init_loop() {
-    }
-
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
     @Override
     public void start() {
-
-/*        try {
-            scheduler.scheduleCommand(new DriveFromGamepad(robot, pad1, SetDrivingStyle.isFieldCentric));
-
-        } catch (SubsystemInUseException e) {} // This catch block will never occur
-
-
-        scheduler.setDefaultCommand(new HoldSubsystemPosition(robot.slides,
-                new RadioButtons(new HashMap<Supplier<Boolean>, Object>() {{
-                    put(pad1::getRightBumper, 0.1); // The slides must be down if we're running the intake
-                }}, false), Subsystem.SLIDES, 0.1, () -> pad1.getX() ? 0.1 : null));
-
-        scheduler.setDefaultCommand(new HoldSubsystemPosition(robot.arm,
-                new RadioButtons(new HashMap<Supplier<Boolean>, Object>() {{
-                    put(pad1::getX, 0.1);
-                }}, false), Subsystem.ARM, 0.1));*/
-
+        scheduler.setDefaultCommand(robot.drivetrain, new DriveFromGamepad(robot.drivetrain, pad1, SetDrivingStyle.isFieldCentric));
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-     */
-    @Override
-    public void loop() {
-    }
+    public void loop() {}
+
 }
