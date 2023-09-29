@@ -11,9 +11,9 @@ public class ArmSubsystem extends SubsystemBase {
 
     public ServoImpl servo;
 
-    public static double downPosition = 0.45;
-    public static double waitingPosition = 0.50;
-    public static double upPosition = 0.55;
+    public static double downPosition = 0.42;
+    public static double waitingPosition = 0.60;
+    public static double upPosition = 0.90;
 
 
     private double targetPosition = downPosition;
