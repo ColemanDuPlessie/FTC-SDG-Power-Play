@@ -35,27 +35,19 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.backend.subsystems.ArmSubsystem;
-import org.firstinspires.ftc.teamcode.backend.subsystems.CameraSubsystem;
-import org.firstinspires.ftc.teamcode.backend.subsystems.DepositSubsystem;
 import org.firstinspires.ftc.teamcode.backend.subsystems.DrivetrainSubsystem;
-import org.firstinspires.ftc.teamcode.backend.subsystems.IntakeArmSubsystem;
 import org.firstinspires.ftc.teamcode.backend.subsystems.IntakeSlidesSubsystem;
 import org.firstinspires.ftc.teamcode.backend.subsystems.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.backend.subsystems.SlidesSubsystem;
 
 /**
  * I should probably write this documentation...
  */
 public class Robot19397 extends Robot {
 
-    public final DepositSubsystem deposit;
     public final ArmSubsystem arm;
-    public final SlidesSubsystem slides;
-//    public final IntakeSubsystem intake;
-//    public final IntakeArmSubsystem intakeArm;
-//    public final IntakeSlidesSubsystem intakeSlides;
+    public final IntakeSubsystem intake;
+    public final IntakeSlidesSubsystem intakeSlides;
     public final DrivetrainSubsystem drivetrain;
-    public final CameraSubsystem camera;
 
     /* local OpMode members. */
     HardwareMap hwMap;
@@ -66,12 +58,8 @@ public class Robot19397 extends Robot {
         this.timer = timer;
         this.drivetrain = new DrivetrainSubsystem();
         this.arm = new ArmSubsystem();
-        this.slides = new SlidesSubsystem();
-//        this.intake = new IntakeSubsystem();
-//        this.intakeArm = new IntakeArmSubsystem();
-//        this.intakeSlides = new IntakeSlidesSubsystem();
-        this.deposit = new DepositSubsystem();
-        this.camera = new CameraSubsystem();
+        this.intake = new IntakeSubsystem();
+        this.intakeSlides = new IntakeSlidesSubsystem();
     }
 
     /* Initialize standard Hardware interfaces */
@@ -86,20 +74,10 @@ public class Robot19397 extends Robot {
         CommandScheduler.getInstance().registerSubsystem(this.drivetrain);
         arm.init(timer, hwMap, isTeleop);
         CommandScheduler.getInstance().registerSubsystem(this.arm);
-        slides.init(timer, hwMap, isTeleop);
-        CommandScheduler.getInstance().registerSubsystem(this.slides);
-//        intake.init(timer, hwMap, isTeleop);
-//        CommandScheduler.getInstance().registerSubsystem(this.intake);
-//        intakeArm.init(timer, hwMap, isTeleop);
-//        CommandScheduler.getInstance().registerSubsystem(this.intakeArm);
-//        intakeSlides.init(timer, hwMap, isTeleop);
-//        CommandScheduler.getInstance().registerSubsystem(this.intakeSlides);
-        deposit.init(timer, hwMap, isTeleop);
-        CommandScheduler.getInstance().registerSubsystem(this.deposit);
-        if (isTeleop) { // TODO
-            camera.init(hwMap, CameraSubsystem.pipelineType.POLE_LOCALIZER);
-            CommandScheduler.getInstance().registerSubsystem(this.camera);
-        }
+        intake.init(timer, hwMap, isTeleop);
+        CommandScheduler.getInstance().registerSubsystem(this.intake);
+        intakeSlides.init(timer, hwMap, isTeleop);
+        CommandScheduler.getInstance().registerSubsystem(this.intakeSlides);
     }
 
  }

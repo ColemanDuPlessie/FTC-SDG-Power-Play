@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.backend.subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -17,44 +18,38 @@ import org.firstinspires.ftc.teamcode.backend.utilities.controllers.PIDControlle
 @Config
 public class IntakeSubsystem extends SubsystemBase {
 
-    public ServoImpl servo;
+    public CRServo servo;
 
-    public static double closedPosition = 0.45;
-    public static double openPosition = 0.50;
-    public static double fullyOpenPosition = 0.55;
-
-
-    private double targetPosition = closedPosition;
+    private double currentSpeed = 0.0;
 
     public void init(ElapsedTime aTimer, HardwareMap ahwMap) {
-        servo = ahwMap.get(ServoImpl.class, "IntakeServo");
-        close();
+        servo = ahwMap.get(CRServo.class, "IntakeServo");
+        servo.setDirection(DcMotorSimple.Direction.REVERSE);
+        servo.setPower(currentSpeed);
     }
 
     public void init(ElapsedTime aTimer, HardwareMap ahwMap, boolean isTeleop) {
-        servo = ahwMap.get(ServoImpl.class, "IntakeServo");
-        close();
+        this.init(aTimer, ahwMap);
     }
 
-    public double getTargetPosition() {return targetPosition;}
+    public double getCurrentSpeed() {return currentSpeed;}
 
-    public double getPosition() {return servo.getPosition();}
-
-    public void setTargetPosition(double target) {
-        targetPosition = target;
-        servo.setPosition(targetPosition);
+    public void setSpeed(double speed) {
+        currentSpeed = Math.min(Math.max(speed, -1.0), 1.0);
+        servo.setPower(currentSpeed);
     }
 
-    public void close() {setTargetPosition(closedPosition);}
-    public void open() {setTargetPosition(openPosition);}
-    public void fullyOpen() {setTargetPosition(fullyOpenPosition);}
+    public void intake() {setSpeed(1.0);}
+    public void hold() {setSpeed(0.0);}
+    public void outtake() {setSpeed(-1.0);}
 
-    public void toggle() {
-        if (getTargetPosition() == openPosition) {
-            close();
-        } else {
-            open();
-        }
+    public void toggleIntake() {
+        if (getCurrentSpeed() == 1.0) {setSpeed(0.0);
+        } else {setSpeed(1.0);}
+    }
+    public void toggleOuttake() {
+        if (getCurrentSpeed() == -1.0) {setSpeed(0.0);
+        } else {setSpeed(-1.0);}
     }
 
 }

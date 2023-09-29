@@ -29,17 +29,11 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.backend.CommandbasedOpmode;
-import org.firstinspires.ftc.teamcode.backend.commands.AutoTargetPole;
-import org.firstinspires.ftc.teamcode.backend.commands.ContextSensitiveRetract;
-import org.firstinspires.ftc.teamcode.backend.commands.DepositConeManual;
 import org.firstinspires.ftc.teamcode.backend.commands.DriveFromGamepad;
 
 
@@ -61,49 +55,28 @@ public class Teleop extends CommandbasedOpmode {
 
         GamepadEx gamepad = new GamepadEx(gamepad1);
 
-        gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenReleased(() -> robot.arm.incrementTargetPosition(-0.2)); // TODO closely inspect setpoints
-        gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenReleased(() -> robot.arm.incrementTargetPosition(0.2));
-
-        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
-                .whenReleased(() -> robot.arm.incrementTargetPosition(-0.2)); // TODO closely inspect setpoints
-        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whenReleased(() -> robot.arm.incrementTargetPosition(0.2));
-
-        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-                .whenReleased(() -> robot.slides.incrementTargetPosition(0.3)); // TODO closely inspect setpoints
         gamepad.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
-                .whenReleased(() -> robot.slides.incrementTargetPosition(-0.3));
+                .whenReleased(() -> robot.arm.down());
+        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+                .whenReleased(() -> robot.arm.center());
+        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+                .whenReleased(() -> robot.arm.center());
+        gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+                .whenReleased(() -> robot.arm.deposit());
+
+        gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenReleased(() -> robot.intakeSlides.incrementTargetPosition(-0.05)); // TODO closely inspect setpoints
+        gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                .whenReleased(() -> robot.intakeSlides.incrementTargetPosition(0.05));
 
         gamepad.getGamepadButton(GamepadKeys.Button.A)
-                .whenReleased(() -> robot.deposit.toggleIntake());
-        gamepad.getGamepadButton(GamepadKeys.Button.B)
-                .whenReleased(new DepositConeManual(robot.slides, robot.arm, robot.deposit, timer));
-/*        gamepad.getGamepadButton(GamepadKeys.Button.X)
-                .whenReleased(new ContextSensitiveRetract(robot.intakeSlides, robot.intakeArm, robot.intake, robot.slides, robot.arm, robot.deposit, timer));
+            .whenReleased(() -> robot.intake.toggleIntake());
         gamepad.getGamepadButton(GamepadKeys.Button.Y)
-                .whenReleased(() -> robot.intake.toggle());*/
+            .whenReleased(() -> robot.intake.toggleOuttake());
 
-        gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
-                .whenPressed(new AutoTargetPole(robot.drivetrain, robot.camera, timer, pad1, gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)), true);
     }
 
     @Override
     public void loop() {
-        telemetry.addData("Arm pos", robot.arm.getPosition());
-        telemetry.addData("Target pos", robot.arm.getTargetPosition());
-        telemetry.addData("Arm spd", robot.arm.motor.getPower());
-        telemetry.addLine();
-        telemetry.addData("Slides pos", robot.slides.getPosition());
-        telemetry.addData("Target pos", robot.slides.getTargetPosition());
-        telemetry.addData("Slides spd", robot.slides.motor.getPower());
-        telemetry.addLine();
-        telemetry.addData("Driving", scheduler.requiring(robot.drivetrain));
-        AutoTargetPole vision = (AutoTargetPole)scheduler.requiring(robot.camera);
-        if (vision != null) {
-            telemetry.addLine();
-            vision.debug(telemetry);
-        }
     }
 }

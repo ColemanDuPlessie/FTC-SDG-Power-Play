@@ -46,7 +46,7 @@ public class SlidesLoggerTest extends OpMode {
 
     @Override
     public void init() {
-        motor = hardwareMap.get(DcMotor.class, "SlidesMotor");
+        motor = hardwareMap.get(DcMotor.class, "IntakeSlidesMotor");
     }
     
     @Override
