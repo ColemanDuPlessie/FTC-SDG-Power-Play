@@ -13,7 +13,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     public static double downPosition = 0.42;
     public static double waitingPosition = 0.60;
-    public static double upPosition = 0.90;
+    public static double upPosition = 1.00;
 
 
     private double targetPosition = downPosition;
